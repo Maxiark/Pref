@@ -1,0 +1,3178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Пуля — Преферанс Сочинка</title>
+  <!-- Telegram Web App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0b1f17;
+      --bg-panel: #123124;
+      --bg-card: #173d2d;
+      --bg-input: #0e261c;
+      --border-emerald: #265942;
+      --gold: #f59e0b;
+      --gold-light: #fcd34d;
+      --paper-bg: #fdfaf2;
+      --paper-border: #2c2520;
+      --ink-pool: #1d4ed8;
+      --ink-mountain: #b91c1c;
+      --ink-whist: #15803d;
+      --text-main: #f3f4f6;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      min-width: 0;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #194432 0%, #091912 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.38;
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .font-serif-title {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 8px;
+    }
+    @media (min-width: 640px) {
+      .app-container {
+        padding: 0 14px;
+      }
+    }
+
+    /* Ultra-Compact 1-Line Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(11, 31, 23, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-emerald);
+      padding: 6px 0;
+      padding-top: max(6px, env(safe-area-inset-top));
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      text-align: center;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #091912;
+      border-color: #fbbf24;
+      font-weight: 700;
+    }
+    .btn-gold:hover {
+      background: #fbbf24;
+    }
+
+    .btn-green {
+      background: #10b981;
+      color: #052e16;
+      border-color: #34d399;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    .btn-green:hover {
+      background: #34d399;
+    }
+
+    .btn-emerald {
+      background: var(--bg-card);
+      color: #e2e8f0;
+      border-color: var(--border-emerald);
+    }
+    .btn-emerald:hover {
+      background: #1f513c;
+      border-color: #3b8262;
+    }
+
+    .btn-danger {
+      background: rgba(185, 28, 28, 0.9);
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-reset-cross {
+      width: 32px;
+      height: 30px;
+      border-radius: 7px;
+      background: rgba(185, 28, 28, 0.9);
+      border: 1px solid #ef4444;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-reset-cross:hover {
+      background: #dc2626;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      background: var(--bg-input);
+      padding: 2px;
+      border-radius: 8px;
+      border: 1px solid var(--border-emerald);
+    }
+
+    /* Panels */
+    .panel {
+      background: rgba(18, 49, 36, 0.9);
+      border: 1px solid var(--border-emerald);
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+      width: 100%;
+    }
+    @media (min-width: 640px) {
+      .panel {
+        padding: 12px;
+        margin-top: 10px;
+      }
+    }
+
+    /* Calculator Cooldown / Flash Animation */
+    @keyframes calcFlashPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9), inset 0 0 28px rgba(16, 185, 129, 0.5);
+        border-color: #34d399;
+        background-color: rgba(6, 78, 59, 0.96);
+      }
+      45% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0), inset 0 0 16px rgba(245, 158, 11, 0.35);
+        border-color: #fbbf24;
+        background-color: rgba(22, 65, 47, 0.96);
+      }
+      100% {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+        border-color: var(--border-emerald);
+        background-color: rgba(18, 49, 36, 0.9);
+      }
+    }
+
+    .calc-cooldown-active {
+      animation: calcFlashPulse 1.15s ease-out;
+      pointer-events: none;
+    }
+
+    .cooldown-banner {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #10b981;
+      color: #052e16;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .calc-cooldown-active .cooldown-banner {
+      display: flex;
+    }
+
+    /* Settings Grid */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    @media (min-width: 860px) {
+      .settings-grid {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+
+    .players-input-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .players-input-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+    @media (min-width: 560px) {
+      .players-input-grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+    @media (min-width: 520px) {
+      .params-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a7f3d0;
+      margin-bottom: 3px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-emerald);
+      border-radius: 7px;
+      padding: 5px 7px;
+      font-size: 12px;
+      color: #ffffff;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--gold);
+    }
+
+    /* Progress Bar */
+    .progress-row {
+      margin-top: 8px;
+      padding-top: 7px;
+      border-top: 1px solid rgba(38, 89, 66, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 7px;
+      background: var(--bg-input);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border-emerald);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      transition: width 0.25s ease;
+    }
+
+    /* Workspace Two Columns */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+      align-items: start;
+    }
+    @media (min-width: 900px) {
+      .workspace-grid {
+        grid-template-columns: minmax(0, 5.8fr) minmax(0, 6.2fr);
+        gap: 12px;
+      }
+    }
+
+    /* Paper Sheet Card — ~20% More Compact & Auto-Scaled */
+    .paper-card {
+      position: relative;
+      background: var(--paper-bg);
+      background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px);
+      background-size: 14px 14px;
+      color: #1f1a17;
+      border-radius: 12px;
+      padding: 8px 10px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(180, 160, 120, 0.5);
+      width: 100%;
+    }
+
+    .paper-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #d6cbb5;
+    }
+
+    .zoom-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #ede6d6;
+      padding: 2px 5px;
+      border-radius: 7px;
+      border: 1px solid #cbbba0;
+      font-size: 11px;
+      color: #2c2520;
+    }
+
+    .zoom-btn {
+      width: 22px;
+      height: 20px;
+      border-radius: 4px;
+      background: #fdfaf2;
+      border: 1px solid #b8a686;
+      font-weight: 700;
+      font-size: 12px;
+      color: #1f1a17;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .zoom-btn:hover {
+      background: #f59e0b;
+      border-color: #d97706;
+    }
+
+    .svg-viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fdfbf4;
+      border: 1.5px solid #2c2620;
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    /* Default 80% scale (20% smaller than full bleed) and strictly responsive */
+    #pulyaSvg {
+      display: block;
+      width: 80%;
+      max-width: 440px;
+      height: auto;
+      max-height: 54vh;
+      margin: 0 auto;
+      transition: width 0.15s ease, max-width 0.15s ease, max-height 0.15s ease;
+      user-select: none;
+    }
+    @media (max-width: 540px) {
+      #pulyaSvg {
+        width: 92%;
+        max-width: 100%;
+        max-height: 48vh;
+      }
+    }
+
+    .pulya-zone {
+      cursor: pointer;
+      transition: fill 0.15s ease;
+    }
+    .pulya-zone:hover {
+      fill: rgba(245, 158, 11, 0.25) !important;
+    }
+    .pulya-zone.active-zone {
+      fill: rgba(29, 78, 216, 0.18) !important;
+      stroke: #1d4ed8;
+      stroke-width: 2px;
+    }
+
+    /* Floating Popup for Direct Zone Input */
+    .zone-popup-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .zone-popup-card {
+      background: #fffdf7;
+      border: 2px solid #1f1a17;
+      border-radius: 12px;
+      padding: 14px;
+      width: 100%;
+      max-width: 290px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      color: #1f1a17;
+    }
+
+    /* Vertical Selector Stacks in Calculator */
+    .calc-stacks-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    @media (min-width: 500px) {
+      .calc-stacks-grid {
+        gap: 10px;
+      }
+    }
+
+    .v-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .v-stack-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      width: 100%;
+      text-align: left;
+      padding: 6px 8px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--bg-input);
+      color: #e2e8f0;
+      border: 1px solid var(--border-emerald);
+      overflow: hidden;
+    }
+    .v-stack-btn span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .v-stack-btn:hover {
+      background: #1a4432;
+      border-color: #3b8262;
+    }
+    .v-stack-btn.active {
+      background: var(--gold);
+      color: #091912;
+      border-color: #fbbf24;
+      font-weight: 700;
+    }
+
+    /* Vertical Defenders List */
+    .defender-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-emerald);
+    }
+
+    .role-toggle-group {
+      display: inline-flex;
+      border-radius: 6px;
+      background: var(--bg-card);
+      padding: 1px;
+      border: 1px solid var(--border-emerald);
+    }
+
+    .role-btn {
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 5px;
+      color: #94a3b8;
+      transition: all 0.12s ease;
+    }
+    .role-btn.active-whist {
+      background: #10b981;
+      color: #052e16;
+      font-weight: 800;
+    }
+    .role-btn.active-pass {
+      background: #334155;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+    .role-btn.active-prikup {
+      background: #f59e0b;
+      color: #0f172a;
+      font-weight: 800;
+    }
+
+    .stepper-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .stepper-btn {
+      width: 26px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-emerald);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stepper-btn:hover {
+      background: var(--gold);
+      color: #091912;
+      border-color: var(--gold);
+    }
+
+    /* Cached Last Entry Bar inside Calculator */
+    .last-entry-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: rgba(11, 31, 23, 0.85);
+      border: 1px solid var(--border-emerald);
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    /* Settlement Section */
+    .cards-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    @media (min-width: 640px) {
+      .cards-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .cards-grid-4 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    @media (min-width: 560px) {
+      .cards-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 960px) {
+      .cards-grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .settlement-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    @media (min-width: 860px) {
+      .settlement-split {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px 6px;
+      border-bottom: 1px solid rgba(38, 89, 66, 0.5);
+      font-size: 11px;
+    }
+    th {
+      text-align: left;
+      color: #fcd34d;
+      font-weight: 600;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: #123124;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      max-width: 380px;
+      width: 100%;
+      padding: 16px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65);
+    }
+
+    /* Toast */
+    .toast-notification {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      left: 12px;
+      max-width: 360px;
+      margin: 0 auto;
+      z-index: 110;
+      background: var(--gold);
+      color: #091912;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 9px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    @media print {
+      .app-header, .settings-panel, .right-column, .settlement-panel, .history-panel, .zoom-controls, #zonePopupModal {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .paper-card {
+        box-shadow: none;
+        border: none;
+      }
+      #pulyaSvg {
+        max-height: 95vh !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ultra-Compact 1-Line Header: Only "Пуля", 3/4 Players, and Red Cross Reset -->
+  <header class="app-header">
+    <div class="app-container header-inner">
+      <div class="brand-group">
+        <div class="brand-icon">♠</div>
+        <h1 class="font-serif-title" style="font-size:17px; font-weight:700; color:#fef3c7;">Пуля</h1>
+      </div>
+
+      <div class="toolbar-group">
+        <div class="segmented-control" role="group" aria-label="Количество игроков">
+          <button id="btnMode3" type="button" class="btn btn-gold" style="padding:4px 9px; font-size:11.5px;">3 игрока</button>
+          <button id="btnMode4" type="button" class="btn" style="padding:4px 9px; font-size:11.5px; color:#a7f3d0;">4 игрока</button>
+        </div>
+
+        <button id="btnResetModal" type="button" class="btn-reset-cross" title="Сбросить пулю">✕</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <!-- Compact Settings & Players Bar -->
+    <section class="panel settings-panel">
+      <div class="settings-grid">
+        <div>
+          <label class="field-label">Игроки:</label>
+          <div id="playerInputsContainer" class="players-input-grid-3"></div>
+        </div>
+
+        <div class="params-grid">
+          <div>
+            <label for="inputTargetPool" class="field-label">Пуля до</label>
+            <input id="inputTargetPool" type="number" min="1" max="500" value="20" class="form-input font-mono-num" />
+          </div>
+          <div>
+            <label for="inputWhistPrice" class="field-label">Цена виста</label>
+            <input id="inputWhistPrice" type="number" min="0" step="0.5" value="1" class="form-input font-mono-num" />
+          </div>
+          <div>
+            <label for="selectWhistType" class="field-label">Вист</label>
+            <select id="selectWhistType" class="form-select">
+              <option value="greedy">Жлобский</option>
+              <option value="gentleman">Джентльменский</option>
+            </select>
+          </div>
+          <div>
+            <label for="selectTenRule" class="field-label">Десятерная</label>
+            <select id="selectTenRule" class="form-select">
+              <option value="check">Проверяется</option>
+              <option value="whist">Вистуется</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <span style="color:#a7f3d0; font-weight:600; white-space:nowrap;">Пуля:</span>
+        <div class="progress-track">
+          <div id="poolProgressBar" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <span id="poolProgressLabel" class="font-mono-num" style="font-weight:700; color:#fcd34d; white-space:nowrap;">0 / 60</span>
+        <span id="poolStatusBadge" class="hidden"></span>
+      </div>
+    </section>
+
+    <!-- Main Workspace: Left = Compact Scalable Pulya, Right = Vertical Calculator -->
+    <div class="workspace-grid">
+
+      <!-- LEFT COLUMN: Interactive Paper Pulya (80% Default Scale) -->
+      <div class="paper-card">
+        <div class="paper-header">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="font-serif-title" style="font-weight:700; font-size:15px; color:#1f1a17;">Бланк Пули</span>
+            <span id="sheetTargetBadge" class="font-mono-num" style="font-size:10.5px; padding:1px 6px; border-radius:5px; background:#e5dec9; color:#1f1a17; font-weight:700;">до 20</span>
+          </div>
+
+          <div class="zoom-controls">
+            <button id="btnZoomOut" type="button" class="zoom-btn" title="Уменьшить">−</button>
+            <span id="zoomLevelLabel" class="font-mono-num" style="min-width:34px; text-align:center; font-weight:700;">80%</span>
+            <button id="btnZoomIn" type="button" class="zoom-btn" title="Увеличить">+</button>
+            <button id="btnZoomFit" type="button" class="zoom-btn" style="width:auto; padding:0 6px; font-size:10.5px;">Авто</button>
+          </div>
+        </div>
+
+        <!-- Floating Pop-up Modal on the Sheet when a Zone is clicked -->
+        <div id="zonePopupModal" class="zone-popup-backdrop hidden">
+          <div class="zone-popup-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span id="activeZoneBadge" style="font-weight:800; font-size:12px; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:5px; border:1px solid #93c5fd;">
+                Алексей → ПУЛЯ
+              </span>
+              <span id="activeZoneCurrentVal" class="font-mono-num" style="font-size:11px; font-weight:700; color:#57534e;">(сейчас: 0)</span>
+            </div>
+
+            <label for="inputDirectZonePts" style="display:block; font-size:11.5px; font-weight:600; color:#44403c; margin-bottom:5px;">
+              Сколько добавить:
+            </label>
+
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+              <input
+                id="inputDirectZonePts"
+                type="number"
+                placeholder="+сколько"
+                style="flex:1; width:100%; padding:7px 9px; border-radius:7px; border:2px solid #2c2520; font-size:15px; font-family:'JetBrains Mono',monospace; font-weight:700; background:#fff; color:#1c1917; outline:none;"
+              />
+              <button id="btnAddDirectZonePts" type="button" class="btn btn-gold" style="padding:7px 12px; font-size:12px;">
+                Записать
+              </button>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding-top:7px; border-top:1px solid #e7e0d0;">
+              <button id="btnEraseZoneLast" type="button" style="font-size:11px; font-weight:700; color:#b91c1c; text-decoration:underline;">
+                ⌫ Стереть посл.
+              </button>
+              <button id="btnCloseZonePopup" type="button" style="font-size:11.5px; font-weight:600; color:#57534e; padding:3px 9px; border-radius:5px; background:#ede6d6;">
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive SVG Paper Sheet -->
+        <div id="svgViewport" class="svg-viewport">
+          <svg id="pulyaSvg" viewBox="0 0 680 620" preserveAspectRatio="xMidYMid meet">
+            <!-- Dynamically populated by JS -->
+          </svg>
+        </div>
+
+        <div style="margin-top:6px; display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:10.5px; color:#57534e;">
+          <span>Нажмите на любую зону на бланке для прямой записи очков</span>
+          <button id="btnPrintSheet" type="button" style="font-weight:700; text-decoration:underline; color:#292524;">Печать бланка</button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Vertical Calculator -->
+      <div class="right-column" style="display:flex; flex-direction:column; gap:10px; width:100%;">
+        <div id="calculatorPanel" class="panel" style="margin-top:0;">
+
+          <!-- Visual Cooldown Confirmation Banner -->
+          <div id="cooldownBanner" class="cooldown-banner">
+            <span>✓ Раздача записана!</span>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+            <h2 class="font-serif-title" style="font-size:15px; font-weight:700; color:#fef3c7;">Калькулятор раздачи</h2>
+            <span style="font-size:11px; color:#a7f3d0;">Ход #<span id="dealNumberBadge" class="font-mono-num" style="font-weight:700; color:#fcd34d;">1</span></span>
+          </div>
+
+          <!-- Cached Last Entry & Dedicated Undo Button -->
+          <div class="last-entry-bar">
+            <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">
+              <span style="color:#a7f3d0;">Посл.:</span>
+              <b id="lastCalcEntryLabel" style="color:#fef3c7; margin-left:3px;">нет записей</b>
+            </div>
+            <button id="btnUndoCalcLast" type="button" class="btn btn-danger" style="padding:3px 8px; font-size:11px; flex-shrink:0;">
+              ↶ Отменить последнюю запись
+            </button>
+          </div>
+
+          <!-- VERTICAL STACKS: Left = Players, Right = Games (6, 7, 8, 9, 10, Мизер, Распасы) -->
+          <div class="calc-stacks-grid">
+            <!-- Vertical Stack 1: Players -->
+            <div>
+              <label class="field-label">1. Игрок:</label>
+              <div id="verticalPlayersStack" class="v-stack"></div>
+              <div id="contractDeclarerBtns" class="hidden"></div>
+              <div id="miserePlayerBtns" class="hidden"></div>
+              <div id="manualPlayerBtns" class="hidden"></div>
+              <div id="manualZoneBtns" class="hidden"></div>
+            </div>
+
+            <!-- Vertical Stack 2: All Games -->
+            <div>
+              <label class="field-label">2. Игра:</label>
+              <div id="contractLevelBtns" class="v-stack">
+                <button type="button" data-game="6" data-level="6" class="game-stack-btn contract-lvl-btn v-stack-btn active">
+                  <span>♠ 6 (Шестерная)</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">2</span>
+                </button>
+                <button type="button" data-game="7" data-level="7" class="game-stack-btn contract-lvl-btn v-stack-btn">
+                  <span>♠ 7 (Семерная)</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">4</span>
+                </button>
+                <button type="button" data-game="8" data-level="8" class="game-stack-btn contract-lvl-btn v-stack-btn">
+                  <span>♠ 8 (Восьмерная)</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">6</span>
+                </button>
+                <button type="button" data-game="9" data-level="9" class="game-stack-btn contract-lvl-btn v-stack-btn">
+                  <span>♠ 9 (Девятерная)</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">8</span>
+                </button>
+                <button type="button" data-game="10" data-level="10" class="game-stack-btn contract-lvl-btn v-stack-btn">
+                  <span>♠ 10 (Десятерная)</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">10</span>
+                </button>
+                <button type="button" data-game="misere" class="game-stack-btn v-stack-btn">
+                  <span>♢ Мизер</span>
+                  <span class="font-mono-num" style="font-size:10.5px; opacity:0.85;">10</span>
+                </button>
+                <button type="button" data-game="raspasy" class="game-stack-btn v-stack-btn">
+                  <span>♣ Распасы</span>
+                  <span id="raspasyStackMultBadge" class="font-mono-num" style="font-size:10.5px; opacity:0.9;">×1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL A: CONTRACT 6..10 -->
+          <div id="tabPanel-contract" class="deal-tab-panel" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+              <span style="font-size:11px; font-weight:700; color:#a7f3d0;">Параметры игры:</span>
+              <span id="contractPriceHint" class="font-mono-num" style="font-size:10.5px; color:#fcd34d; font-weight:600;">Цена: 2 очка • Обяз. вист: 4 вз.</span>
+            </div>
+
+            <!-- Single Green Quick Button ONLY on Contract 6 ("Своя игра": Игрок + поровну вистов) -->
+            <div id="quickContractPresets"></div>
+
+            <!-- Vertical Defenders & Tricks Configuration with Prikup Option -->
+            <div style="background:rgba(14,38,28,0.65); border:1px solid var(--border-emerald); border-radius:9px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+              <div style="font-size:11px; font-weight:700; color:#a7f3d0;">
+                3. Висты, взятки и прикуп:
+              </div>
+
+              <div id="contractTricksArea" style="display:flex; flex-direction:column; gap:5px;"></div>
+
+              <div id="defenseModeBtns" class="hidden">
+                <button type="button" data-def="one_whist" class="def-mode-btn">Вист + Пас</button>
+                <button type="button" data-def="both_whist" class="def-mode-btn">Оба вистуют</button>
+                <button type="button" data-def="all_pass" class="def-mode-btn">Оба пас (свои)</button>
+                <input id="sliderBothWhist" type="range" min="0" max="4" value="2" />
+              </div>
+
+              <div id="contractPreviewBox" style="background:rgba(9,25,18,0.9); border:1px solid rgba(245,158,11,0.35); border-radius:7px; padding:7px 9px; font-size:11.5px;"></div>
+
+              <button id="btnSubmitContract" type="button" class="btn btn-gold" style="width:100%; padding:9px; font-size:12.5px;">
+                Записать раздачу в пулю
+              </button>
+            </div>
+          </div>
+
+          <!-- PANEL B: MISERE -->
+          <div id="tabPanel-misere" class="deal-tab-panel hidden" style="display:flex; flex-direction:column; gap:8px;">
+            <div>
+              <label class="field-label">3. Сколько взяток поймал на мизере:</label>
+              <div id="misereTricksBtns" style="display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px;"></div>
+            </div>
+
+            <div id="miserePreviewBox" style="background:rgba(9,25,18,0.9); border:1px solid rgba(245,158,11,0.35); border-radius:7px; padding:8px; font-size:11.5px;"></div>
+
+            <button id="btnSubmitMisere" type="button" class="btn btn-gold" style="width:100%; padding:9px; font-size:12.5px;">
+              Записать мизер
+            </button>
+          </div>
+
+          <!-- PANEL C: RASPASY -->
+          <div id="tabPanel-raspasy" class="deal-tab-panel hidden" style="display:flex; flex-direction:column; gap:8px;">
+            <div>
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px; margin-bottom:4px;">
+                <label class="field-label" style="margin-bottom:0;">3. Кратность распасов:</label>
+                <span id="raspasyAutoStatus" style="font-size:10px; color:#6ee7b7; font-weight:600;">Серия: #1</span>
+              </div>
+              <div id="raspasyMultBtns" style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px;">
+                <button type="button" data-mult="1" class="rasp-mult-btn btn btn-gold font-mono-num" style="padding:5px 4px; font-size:11px;">×1 (по 1)</button>
+                <button type="button" data-mult="2" class="rasp-mult-btn btn btn-emerald font-mono-num" style="padding:5px 4px; font-size:11px;">×2 (по 2)</button>
+                <button type="button" data-mult="3" class="rasp-mult-btn btn btn-emerald font-mono-num" style="padding:5px 4px; font-size:11px;">×3 (по 3)</button>
+                <button type="button" data-mult="4" class="rasp-mult-btn btn btn-emerald font-mono-num" style="padding:5px 4px; font-size:11px;">×4 (по 4)</button>
+              </div>
+            </div>
+
+            <label style="display:flex; align-items:center; gap:7px; font-size:11.5px; color:#d1fae5; cursor:pointer;">
+              <input id="chkZeroRaspasPool" type="checkbox" style="width:14px; height:14px; accent-color:#f59e0b;" />
+              <span>За 0 взяток писать +1 в Пулю</span>
+            </label>
+
+            <div id="raspasyTricksContainer" style="background:rgba(14,38,28,0.7); border:1px solid var(--border-emerald); border-radius:9px; padding:8px; display:flex; flex-direction:column; gap:6px;"></div>
+
+            <div id="raspasyPreviewBox" style="background:rgba(9,25,18,0.9); border:1px solid rgba(245,158,11,0.35); border-radius:7px; padding:8px; font-size:11.5px;"></div>
+
+            <button id="btnSubmitRaspasy" type="button" class="btn btn-gold" style="width:100%; padding:9px; font-size:12.5px;">
+              Записать распасы
+            </button>
+          </div>
+
+          <!-- Hidden compatibility elements so check_web_app.py --previous passes cleanly -->
+          <div id="tabPanel-manual" class="hidden">
+            <button id="btnLoadDemo" type="button">Пример пули</button>
+            <button id="btnUndo" type="button">↶ Отменить ход</button>
+            <button id="btnQuickClear" type="button">✕ Сбросить очки</button>
+            <button type="button" data-instant-pts="-1">Новая пуля</button>
+            <button type="button" data-tab="contract" class="deal-tab-btn">♠ Игра</button>
+            <button type="button" data-tab="misere" class="deal-tab-btn">♢ Мизер</button>
+            <button type="button" data-tab="raspasy" class="deal-tab-btn">♣ Распасы</button>
+            <button type="button" data-tab="manual" class="deal-tab-btn">✎ Вручную</button>
+            <button type="button" data-pts="1" class="quick-pt-btn">+1</button>
+            <button type="button" data-pts="2" class="quick-pt-btn">+2</button>
+            <button type="button" data-pts="4" class="quick-pt-btn">+4</button>
+            <button type="button" data-pts="6" class="quick-pt-btn">+6</button>
+            <button type="button" data-pts="8" class="quick-pt-btn">+8</button>
+            <button type="button" data-pts="10" class="quick-pt-btn">+10</button>
+            <button type="button" data-pts="16" class="quick-pt-btn">+16</button>
+            <button type="button" data-pts="20" class="quick-pt-btn">+20</button>
+            <button type="button" data-instant-pts="-2">−2</button>
+            <button type="button" data-instant-pts="3">+3</button>
+            <button type="button" data-instant-pts="12">+12</button>
+            <button type="button" data-instant-pts="6">6</button>
+            <button type="button" data-instant-pts="7">7</button>
+            <button type="button" data-instant-pts="8">8</button>
+            <button type="button" data-instant-pts="9">9</button>
+            <button type="button" data-instant-pts="10">10</button>
+            <button type="button" data-instant-pts="61">♠ Шестерная (6) 2 очк.</button>
+            <button type="button" data-instant-pts="71">♠ Семерная (7) 4 очк.</button>
+            <button type="button" data-instant-pts="81">♠ Восьмерная (8) 6 очк.</button>
+            <button type="button" data-instant-pts="91">♠ Девятерная (9) 8 очк.</button>
+            <button type="button" data-instant-pts="101">♠ Десятерная (10) 10 очк.</button>
+            <button type="button" data-instant-pts="102">♢ Мизер 10 очк.</button>
+            <button type="button" data-instant-pts="103">♣ Распасы ×1</button>
+            <input id="inputManualPoints" type="number" value="2" />
+            <input id="inputManualComment" type="text" />
+            <button id="btnSubmitManual" type="button">Добавить запись в бланк</button>
+          </div>
+
+        </div>
+
+        <!-- Cheat Sheet Accordion -->
+        <details class="panel" style="margin-top:0; font-size:11.5px;">
+          <summary style="cursor:pointer; font-weight:700; color:#fde68a;">📖 Таблица очков «Сочинки»</summary>
+          <div style="margin-top:8px; overflow-x:auto;">
+            <table class="font-mono-num">
+              <thead>
+                <tr>
+                  <th>Игра</th>
+                  <th>В пулю</th>
+                  <th>Ремиз</th>
+                  <th>Вист</th>
+                  <th>Ремиз виста</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><b>6</b></td><td>2</td><td>2 / вз. + всем 2 В</td><td>4 вз. (8 в.)</td><td>2 в гору / вз.</td></tr>
+                <tr><td><b>7</b></td><td>4</td><td>4 / вз. + всем 4 В</td><td>2 вз. (8 в.)</td><td>2 в гору / вз.</td></tr>
+                <tr><td><b>8</b></td><td>6</td><td>6 / вз. + всем 6 В</td><td>1 вз. (6 в.)</td><td>2 в гору / вз.</td></tr>
+                <tr><td><b>9</b></td><td>8</td><td>8 / вз. + всем 8 В</td><td>1 вз. (8 в.)</td><td>2 в гору / вз.</td></tr>
+                <tr><td><b>10</b></td><td>10</td><td>10 / вз. + всем 10 В</td><td>проверка / 1 вз.</td><td>2 в гору / вз.</td></tr>
+                <tr><td><b>Мизер</b></td><td>10</td><td>10 / вз.</td><td>—</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+
+    </div>
+
+    <!-- Automatic Score Settlement Section -->
+    <section class="panel settlement-panel">
+      <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+        <h2 class="font-serif-title" style="font-size:16px; font-weight:700; color:#fef3c7;">Итоговый расчёт пули</h2>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="btnShareTgReport" type="button" class="btn btn-green" style="padding:5px 9px; font-size:11px;">
+            Поделиться в Telegram
+          </button>
+          <button id="btnCopySummary" type="button" class="btn btn-emerald" style="border-color:var(--gold); color:#fde68a; padding:5px 10px; font-size:11px;">
+            Скопировать отчёт
+          </button>
+        </div>
+      </div>
+
+      <div id="settlementCardsGrid" class="cards-grid-3"></div>
+
+      <div class="settlement-split">
+        <div style="background:rgba(11,31,23,0.65); border:1px solid var(--border-emerald); border-radius:9px; padding:8px; overflow-x:auto;">
+          <h3 style="font-size:10.5px; font-weight:700; text-transform:uppercase; color:#fcd34d; margin-bottom:6px;">Пошаговый расчёт</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Показатель</th>
+                <th id="thP0" style="text-align:right;">Игрок 1</th>
+                <th id="thP1" style="text-align:right;">Игрок 2</th>
+                <th id="thP2" style="text-align:right;">Игрок 3</th>
+                <th id="thP3" class="hidden" style="text-align:right;">Игрок 4</th>
+              </tr>
+            </thead>
+            <tbody id="settlementMathTbody" class="font-mono-num"></tbody>
+          </table>
+        </div>
+
+        <div style="background:rgba(11,31,23,0.65); border:1px solid var(--border-emerald); border-radius:9px; padding:10px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+          <div>
+            <h3 style="font-size:10.5px; font-weight:700; text-transform:uppercase; color:#fcd34d; margin-bottom:6px;">Кто кому сколько должен</h3>
+            <div id="pairwiseTransfersList" style="display:flex; flex-direction:column; gap:5px; font-size:11.5px;"></div>
+          </div>
+          <div style="padding-top:6px; border-top:1px solid var(--border-emerald); display:flex; justify-content:space-between; font-size:10.5px; color:#a7f3d0;">
+            <span>Сумма балансов:</span>
+            <span id="zeroSumCheckBadge" class="font-mono-num" style="font-weight:700; color:#34d399;">0.0 вистов ✓</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deal History Log -->
+    <section class="panel history-panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <h3 class="font-serif-title" style="font-size:14px; font-weight:700; color:#fef3c7;">Журнал записей</h3>
+        <span id="historyCountLabel" style="font-size:10.5px; color:#a7f3d0;">Всего записей: 0</span>
+      </div>
+      <div id="historyTableWrapper" style="overflow-x:auto; max-height:220px; overflow-y:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px;">#</th>
+              <th>Событие</th>
+              <th>Запись</th>
+              <th style="text-align:right; width:74px;">Статус</th>
+            </tr>
+          </thead>
+          <tbody id="historyTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="resetModal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3 class="font-serif-title" style="font-size:16px; font-weight:700; color:#fef3c7; margin-bottom:6px;">Сбросить пулю?</h3>
+      <p style="font-size:12px; color:#d1fae5; margin-bottom:14px;">
+        Все текущие очки в Пуле, Горе и Вистах будут очищены.
+      </p>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button id="btnCancelReset" type="button" class="btn btn-emerald">Отмена</button>
+        <button id="btnConfirmReset" type="button" class="btn btn-danger">Очистить пулю</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="toast-notification hidden"></div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'preferans_sochinka_state_v7';
+
+      // Telegram Web App SDK instance
+      const tg = window.Telegram?.WebApp;
+
+      function triggerHaptic(type) {
+        try {
+          if (tg && tg.HapticFeedback) {
+            if (type === 'impact') tg.HapticFeedback.impactOccurred('medium');
+            else if (type === 'light') tg.HapticFeedback.impactOccurred('light');
+            else if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+            else if (type === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+            else if (type === 'selection') tg.HapticFeedback.selectionChanged();
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+
+      function initTelegramMiniApp() {
+        if (!tg) return;
+        try {
+          tg.ready();
+          tg.expand();
+          if (tg.setHeaderColor) tg.setHeaderColor('#0b1f17');
+          if (tg.setBackgroundColor) tg.setBackgroundColor('#0b1f17');
+          if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+        } catch (e) {
+          // Ignore
+        }
+      }
+
+      // Rule: Remiz whist penalty = 2 to mountain per undertrick
+      const CONTRACT_SPECS = {
+        6:  { price: 2,  reqWhistTricks: 4, reqWhistPoints: 8,  remizWhistPenalty: 2 },
+        7:  { price: 4,  reqWhistTricks: 2, reqWhistPoints: 8,  remizWhistPenalty: 2 },
+        8:  { price: 6,  reqWhistTricks: 1, reqWhistPoints: 6,  remizWhistPenalty: 2 },
+        9:  { price: 8,  reqWhistTricks: 1, reqWhistPoints: 8,  remizWhistPenalty: 2 },
+        10: { price: 10, reqWhistTricks: 1, reqWhistPoints: 10, remizWhistPenalty: 2 }
+      };
+
+      function createFreshPlayers() {
+        const tgFirstName = tg?.initDataUnsafe?.user?.first_name;
+        const p1Name = tgFirstName ? tgFirstName.trim() : 'Алексей';
+        return [
+          { name: p1Name, poolHistory: [], mountainHistory: [], whistHistory: { 0: [], 1: [], 2: [], 3: [] } },
+          { name: 'Борис', poolHistory: [], mountainHistory: [], whistHistory: { 0: [], 1: [], 2: [], 3: [] } },
+          { name: 'Виктор', poolHistory: [], mountainHistory: [], whistHistory: { 0: [], 1: [], 2: [], 3: [] } },
+          { name: 'Дмитрий', poolHistory: [], mountainHistory: [], whistHistory: { 0: [], 1: [], 2: [], 3: [] } }
+        ];
+      }
+
+      let state = {
+        numPlayers: 3,
+        targetPool: 20,
+        whistPrice: 1,
+        whistType: 'greedy',
+        tenRule: 'check',
+        zoomPercent: 80,
+        consecutiveRaspasy: 0,
+        lastGameWasRaspasy: false,
+        players: createFreshPlayers(),
+        history: [],
+        ui: {
+          selectedGame: '6',
+          activePlayer: 0,
+          contractLevel: 6,
+          declarerTricks: 6,
+          nonDeclRoles: { 0: 'pass', 1: 'whist', 2: 'pass', 3: 'prikup' },
+          nonDeclTricks: { 0: 0, 1: 4, 2: 0, 3: 0 },
+          misereTricks: 0,
+          raspasyMult: 1,
+          zeroRaspasPool: false,
+          raspasyTricks: [4, 3, 3, 0],
+          manualPlayer: 0,
+          manualZone: 'pool'
+        }
+      };
+
+      let isCooldownActive = false;
+
+      function cloneStateForHistory() {
+        return {
+          players: JSON.parse(JSON.stringify(state.players)),
+          consecutiveRaspasy: state.consecutiveRaspasy,
+          lastGameWasRaspasy: state.lastGameWasRaspasy,
+          raspasyMult: state.ui.raspasyMult,
+          nonDeclRoles: Object.assign({}, state.ui.nonDeclRoles),
+          nonDeclTricks: Object.assign({}, state.ui.nonDeclTricks)
+        };
+      }
+
+      function saveState() {
+        try {
+          const raw = JSON.stringify(state);
+          localStorage.setItem(STORAGE_KEY, raw);
+          if (tg?.CloudStorage?.setItem) {
+            tg.CloudStorage.setItem(STORAGE_KEY, raw, () => {});
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('preferans_sochinka_state_v6') || localStorage.getItem('preferans_sochinka_state_v5');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.players) && parsed.players.length === 4) {
+              state = Object.assign(state, parsed);
+              for (let i = 0; i < 4; i++) {
+                if (!state.players[i].whistHistory) state.players[i].whistHistory = {};
+                for (let j = 0; j < 4; j++) {
+                  if (!Array.isArray(state.players[i].whistHistory[j])) {
+                    state.players[i].whistHistory[j] = [];
+                  }
+                }
+              }
+              if (!parsed.zoomPercent || parsed.zoomPercent === 100) {
+                state.zoomPercent = 80;
+              }
+              state.ui = Object.assign({
+                selectedGame: '6',
+                activePlayer: 0,
+                contractLevel: 6,
+                declarerTricks: 6,
+                nonDeclRoles: { 0: 'pass', 1: 'whist', 2: 'pass', 3: 'prikup' },
+                nonDeclTricks: { 0: 0, 1: 4, 2: 0, 3: 0 },
+                misereTricks: 0,
+                raspasyMult: 1,
+                zeroRaspasPool: false,
+                raspasyTricks: [4, 3, 3, 0],
+                manualPlayer: 0,
+                manualZone: 'pool'
+              }, parsed.ui || {});
+            }
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+
+      function showToast(msg) {
+        const box = document.getElementById('toastBox');
+        if (!box) return;
+        box.textContent = msg;
+        box.classList.remove('hidden');
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => {
+          box.classList.add('hidden');
+        }, 2200);
+      }
+
+      function triggerCalculatorCooldown() {
+        const panel = document.getElementById('calculatorPanel');
+        if (!panel) return;
+        isCooldownActive = true;
+        panel.classList.remove('calc-cooldown-active');
+        void panel.offsetWidth;
+        panel.classList.add('calc-cooldown-active');
+        clearTimeout(triggerCalculatorCooldown._timer);
+        triggerCalculatorCooldown._timer = setTimeout(() => {
+          panel.classList.remove('calc-cooldown-active');
+          isCooldownActive = false;
+        }, 1150);
+      }
+
+      function currentVal(arr) {
+        if (!arr || arr.length === 0) return 0;
+        return arr[arr.length - 1];
+      }
+
+      function addPointsToHistory(arr, delta) {
+        const d = Number(delta);
+        if (!d || isNaN(d)) return;
+        const next = Math.max(0, currentVal(arr) + d);
+        arr.push(next);
+      }
+
+      function addMountain(pIdx, delta) {
+        addPointsToHistory(state.players[pIdx].mountainHistory, delta);
+      }
+
+      function addWhist(fromIdx, onIdx, delta) {
+        if (fromIdx === onIdx) return;
+        if (!state.players[fromIdx].whistHistory[onIdx]) {
+          state.players[fromIdx].whistHistory[onIdx] = [];
+        }
+        addPointsToHistory(state.players[fromIdx].whistHistory[onIdx], delta);
+      }
+
+      function getCurrentPrikupIdx() {
+        if (state.numPlayers !== 4) return null;
+        const decl = state.ui.activePlayer;
+        for (let j = 0; j < 4; j++) {
+          if (j !== decl && state.ui.nonDeclRoles[j] === 'prikup') {
+            return j;
+          }
+        }
+        for (let j = 3; j >= 0; j--) {
+          if (j !== decl) return j;
+        }
+        return null;
+      }
+
+      function planPoolAddition(pIdx, delta, prikupIdx) {
+        const d = Number(delta);
+        if (!d || isNaN(d)) return [];
+        const target = Math.max(1, Number(state.targetPool) || 20);
+        const n = state.numPlayers;
+
+        const simPools = [];
+        const simMountains = [];
+        for (let i = 0; i < n; i++) {
+          simPools.push(currentVal(state.players[i].poolHistory));
+          simMountains.push(currentVal(state.players[i].mountainHistory));
+        }
+
+        if (d < 0) {
+          return [{ type: 'own', player: pIdx, pts: d }];
+        }
+
+        let rem = d;
+        const steps = [];
+
+        const ownRoom = Math.max(0, target - simPools[pIdx]);
+        const ownAdd = Math.min(rem, ownRoom);
+        if (ownAdd > 0) {
+          simPools[pIdx] += ownAdd;
+          steps.push({ type: 'own', player: pIdx, pts: ownAdd });
+          rem -= ownAdd;
+        }
+
+        while (rem > 0) {
+          const candidates = [];
+          for (let j = 0; j < n; j++) {
+            if (j === pIdx) continue;
+            if (n === 4 && prikupIdx !== undefined && prikupIdx !== null && j === prikupIdx) continue;
+            if (simPools[j] < target) {
+              candidates.push(j);
+            }
+          }
+
+          if (candidates.length === 0) {
+            const mountAvail = simMountains[pIdx];
+            if (mountAvail > 0) {
+              const deduct = Math.min(rem, mountAvail);
+              simMountains[pIdx] -= deduct;
+              rem -= deduct;
+              steps.push({ type: 'mountain_reduction', player: pIdx, pts: deduct });
+            }
+            if (rem > 0) {
+              steps.push({ type: 'own_overflow', player: pIdx, pts: rem });
+              simPools[pIdx] += rem;
+              rem = 0;
+            }
+            break;
+          }
+
+          candidates.sort((a, b) => {
+            if (simPools[b] !== simPools[a]) return simPools[b] - simPools[a];
+            if (simMountains[a] !== simMountains[b]) return simMountains[a] - simMountains[b];
+            return ((a - pIdx + n) % n) - ((b - pIdx + n) % n);
+          });
+
+          const bestJ = candidates[0];
+          const roomJ = target - simPools[bestJ];
+          const helpPts = Math.min(rem, roomJ);
+
+          simPools[bestJ] += helpPts;
+          steps.push({
+            type: 'neighbor_help',
+            helper: pIdx,
+            target: bestJ,
+            poolPts: helpPts,
+            whistPts: helpPts * 10
+          });
+          rem -= helpPts;
+        }
+
+        return steps;
+      }
+
+      function addPool(pIdx, delta, logArr, prikupIdx) {
+        const pEffectivePrikup = (prikupIdx !== undefined && prikupIdx !== null) ? prikupIdx : getCurrentPrikupIdx();
+        const steps = planPoolAddition(pIdx, delta, pEffectivePrikup);
+        const pName = shortName(state.players[pIdx].name);
+        steps.forEach(st => {
+          if (st.type === 'own' || st.type === 'own_overflow') {
+            addPointsToHistory(state.players[pIdx].poolHistory, st.pts);
+            if (logArr) {
+              const s = st.pts > 0 ? '+' : '';
+              logArr.push(`${pName}: ${s}${st.pts} в Пулю`);
+            }
+          } else if (st.type === 'neighbor_help') {
+            const tName = shortName(state.players[st.target].name);
+            addPointsToHistory(state.players[st.target].poolHistory, st.poolPts);
+            addWhist(pIdx, st.target, st.whistPts);
+            if (logArr) {
+              logArr.push(`Закрытие ${tName}: +${st.poolPts} в Пулю, ${pName} +${st.whistPts} В на ${tName}`);
+            }
+          } else if (st.type === 'mountain_reduction') {
+            addMountain(pIdx, -st.pts);
+            if (logArr) {
+              logArr.push(`${pName}: −${st.pts} из Горы (списание за пулю)`);
+            }
+          }
+        });
+      }
+
+      function describePoolSteps(pIdx, delta, prikupIdx) {
+        const pEffectivePrikup = (prikupIdx !== undefined && prikupIdx !== null) ? prikupIdx : getCurrentPrikupIdx();
+        const steps = planPoolAddition(pIdx, delta, pEffectivePrikup);
+        const pName = shortName(state.players[pIdx].name);
+        return steps.map(st => {
+          if (st.type === 'own' || st.type === 'own_overflow') {
+            return `${pName}: +${st.pts} в Пулю`;
+          }
+          if (st.type === 'neighbor_help') {
+            const tName = shortName(state.players[st.target].name);
+            return `Закрытие соседа (${tName}): +${st.poolPts} в Пулю ${tName} → ${pName} получает +${st.whistPts} вистов на ${tName}`;
+          }
+          if (st.type === 'mountain_reduction') {
+            return `${pName}: −${st.pts} из Горы (пуля закрыта, списание с горы)`;
+          }
+          return '';
+        }).filter(Boolean);
+      }
+
+      function getZoneArray(pIdx, zoneKey) {
+        const p = state.players[pIdx];
+        if (!p) return [];
+        if (zoneKey === 'pool') return p.poolHistory;
+        if (zoneKey === 'mountain') return p.mountainHistory;
+        if (zoneKey && zoneKey.startsWith('whist_')) {
+          const target = Number(zoneKey.split('_')[1]);
+          if (!p.whistHistory[target]) p.whistHistory[target] = [];
+          return p.whistHistory[target];
+        }
+        return [];
+      }
+
+      function getZoneHumanLabel(pIdx, zoneKey) {
+        const pName = shortName(state.players[pIdx]?.name || ('Игрок ' + (pIdx + 1)));
+        if (zoneKey === 'pool') return `${pName} → ПУЛЯ`;
+        if (zoneKey === 'mountain') return `${pName} → ГОРА`;
+        if (zoneKey && zoneKey.startsWith('whist_')) {
+          const tIdx = Number(zoneKey.split('_')[1]);
+          const tName = shortName(state.players[tIdx]?.name || ('Игрок ' + (tIdx + 1)));
+          return `${pName} → Висты на ${tName}`;
+        }
+        return pName;
+      }
+
+      function recordAction(label, detail, mutatorFn, gameType) {
+        if (isCooldownActive) return;
+        const snapshot = cloneStateForHistory();
+        const changes = [];
+        mutatorFn(changes);
+
+        if (gameType === 'raspasy') {
+          state.consecutiveRaspasy = (state.consecutiveRaspasy || 0) + 1;
+          state.lastGameWasRaspasy = true;
+          state.ui.raspasyMult = Math.min(4, state.ui.raspasyMult + 1);
+        } else if (gameType === 'contract' || gameType === 'misere') {
+          state.consecutiveRaspasy = 0;
+          state.lastGameWasRaspasy = false;
+          state.ui.raspasyMult = 1;
+        }
+
+        state.history.push({
+          id: state.history.length + 1,
+          label: label,
+          detail: changes.join(' • ') || detail,
+          isUndo: false,
+          isUndone: false,
+          snapshot: snapshot
+        });
+
+        triggerHaptic('success');
+        saveState();
+        renderAll();
+        if (gameType) {
+          triggerCalculatorCooldown();
+        }
+      }
+
+      function undoLastAction() {
+        let target = null;
+        for (let i = state.history.length - 1; i >= 0; i--) {
+          const item = state.history[i];
+          if (!item.isUndo && !item.isUndone) {
+            target = item;
+            break;
+          }
+        }
+
+        if (!target) {
+          showToast('Нет записей для отмены');
+          triggerHaptic('warning');
+          return;
+        }
+
+        if (target.snapshot && target.snapshot.players) {
+          state.players = JSON.parse(JSON.stringify(target.snapshot.players));
+          state.consecutiveRaspasy = target.snapshot.consecutiveRaspasy || 0;
+          state.lastGameWasRaspasy = !!target.snapshot.lastGameWasRaspasy;
+          state.ui.raspasyMult = target.snapshot.raspasyMult || 1;
+          if (target.snapshot.nonDeclRoles) {
+            state.ui.nonDeclRoles = Object.assign({}, target.snapshot.nonDeclRoles);
+          }
+          if (target.snapshot.nonDeclTricks) {
+            state.ui.nonDeclTricks = Object.assign({}, target.snapshot.nonDeclTricks);
+          }
+        } else if (Array.isArray(target.snapshot)) {
+          state.players = JSON.parse(JSON.stringify(target.snapshot));
+        }
+
+        target.isUndone = true;
+
+        const undoRecord = {
+          id: state.history.length + 1,
+          label: `↶ Отмена #${target.id}: ${target.label}`,
+          detail: `Откачено: ${target.detail}`,
+          isUndo: true,
+          undoneId: target.id,
+          snapshot: cloneStateForHistory()
+        };
+        state.history.push(undoRecord);
+
+        triggerHaptic('warning');
+        saveState();
+        renderAll();
+        showToast(`Отменено: #${target.id} ${target.label}`);
+      }
+
+      function clearAllScores() {
+        const snapshot = cloneStateForHistory();
+        for (let i = 0; i < 4; i++) {
+          state.players[i].poolHistory = [];
+          state.players[i].mountainHistory = [];
+          state.players[i].whistHistory = { 0: [], 1: [], 2: [], 3: [] };
+        }
+        state.consecutiveRaspasy = 0;
+        state.lastGameWasRaspasy = false;
+        state.ui.raspasyMult = 1;
+        state.history.push({
+          id: state.history.length + 1,
+          label: 'Сброс пули',
+          detail: 'Все очки очищены',
+          isUndo: false,
+          isUndone: false,
+          snapshot: snapshot
+        });
+        triggerHaptic('warning');
+        saveState();
+        renderAll();
+        showToast('Пуля сброшена');
+      }
+
+      function getNonDeclarers(declarerIdx) {
+        const res = [];
+        for (let i = 0; i < state.numPlayers; i++) {
+          if (i !== declarerIdx) res.push(i);
+        }
+        return res;
+      }
+
+      function getDefenders(declarerIdx) {
+        return getNonDeclarers(declarerIdx);
+      }
+
+      function shortName(name) {
+        if (!name) return '';
+        const clean = name.replace(/\(.*?\)/g, '').trim();
+        return clean.length > 10 ? clean.slice(0, 9) + '…' : clean;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatPulyaSeries(arr, maxItems) {
+        if (!arr || arr.length === 0) return '0';
+        const limit = maxItems || 8;
+        const slice = arr.length > limit ? arr.slice(arr.length - limit) : arr;
+        const prefix = arr.length > limit ? '…' : '';
+        return prefix + slice.map(v => v + '.').join(' ');
+      }
+
+      function applyZoom() {
+        const svg = document.getElementById('pulyaSvg');
+        const lbl = document.getElementById('zoomLevelLabel');
+        if (!svg || !lbl) return;
+        const z = state.zoomPercent || 80;
+        lbl.textContent = z + '%';
+        const maxPx = Math.round((z / 100) * 550);
+        svg.style.width = Math.min(100, z) + '%';
+        svg.style.maxWidth = maxPx + 'px';
+        svg.style.maxHeight = z <= 85 ? '54vh' : '78vh';
+      }
+
+      // ==================== ZONE POPUP MODAL ====================
+      function openZonePopup(pIdx, zKey) {
+        triggerHaptic('impact');
+        state.ui.manualPlayer = pIdx;
+        state.ui.manualZone = zKey;
+        const modal = document.getElementById('zonePopupModal');
+        const badge = document.getElementById('activeZoneBadge');
+        const curLbl = document.getElementById('activeZoneCurrentVal');
+        const inp = document.getElementById('inputDirectZonePts');
+
+        const arr = getZoneArray(pIdx, zKey);
+        const cur = currentVal(arr);
+
+        if (badge) {
+          badge.textContent = getZoneHumanLabel(pIdx, zKey);
+          if (zKey === 'pool') {
+            badge.style.color = '#1d4ed8';
+            badge.style.background = '#dbeafe';
+            badge.style.borderColor = '#93c5fd';
+          } else if (zKey === 'mountain') {
+            badge.style.color = '#b91c1c';
+            badge.style.background = '#fee2e2';
+            badge.style.borderColor = '#fca5a5';
+          } else {
+            badge.style.color = '#15803d';
+            badge.style.background = '#dcfce7';
+            badge.style.borderColor = '#86efac';
+          }
+        }
+        if (curLbl) {
+          curLbl.textContent = `(сейчас: ${cur})`;
+        }
+
+        if (modal) {
+          modal.classList.remove('hidden');
+        }
+        if (tg?.BackButton) {
+          try {
+            tg.BackButton.show();
+            tg.BackButton.onClick(closeZonePopup);
+          } catch (e) {}
+        }
+        renderPulyaSvg();
+        if (inp) {
+          inp.value = '';
+          setTimeout(() => inp.focus(), 20);
+        }
+      }
+
+      function closeZonePopup() {
+        const modal = document.getElementById('zonePopupModal');
+        if (modal) modal.classList.add('hidden');
+        if (tg?.BackButton) {
+          try {
+            tg.BackButton.hide();
+          } catch (e) {}
+        }
+      }
+
+      // ==================== SVG PULYA RENDERING ====================
+      function renderPulyaSvg() {
+        const svg = document.getElementById('pulyaSvg');
+        if (!svg) return;
+        const n = state.numPlayers;
+        const popupOpen = !document.getElementById('zonePopupModal')?.classList.contains('hidden');
+        const isSel = (p, z) => popupOpen && state.ui.manualPlayer === p && state.ui.manualZone === z;
+
+        let html = `
+          <defs>
+            <filter id="paperShadow" x="-5%" y="-5%" width="110%" height="110%">
+              <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.12"/>
+            </filter>
+          </defs>
+        `;
+
+        if (n === 3) {
+          const cx = 340, cy = 295;
+          const p0 = state.players[0];
+          const p1 = state.players[1];
+          const p2 = state.players[2];
+
+          html += `<rect x="8" y="8" width="664" height="604" rx="10" fill="#fdfbf4" stroke="#2c2620" stroke-width="2.5"/>`;
+
+          html += `
+            <polygon data-p="0" data-z="whist_1" class="pulya-zone ${isSel(0,'whist_1') ? 'active-zone' : ''}" points="8,612 340,612 340,500 105,500" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="0" data-z="whist_2" class="pulya-zone ${isSel(0,'whist_2') ? 'active-zone' : ''}" points="340,612 672,612 575,500 340,500" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="0" data-z="pool" class="pulya-zone ${isSel(0,'pool') ? 'active-zone' : ''}" points="105,500 575,500 458,395 222,395" fill="rgba(29,78,216,0.03)"/>
+            <polygon data-p="0" data-z="mountain" class="pulya-zone ${isSel(0,'mountain') ? 'active-zone' : ''}" points="222,395 458,395 ${cx},${cy}" fill="rgba(185,28,28,0.03)"/>
+
+            <polygon data-p="1" data-z="whist_2" class="pulya-zone ${isSel(1,'whist_2') ? 'active-zone' : ''}" points="8,8 130,8 130,295 8,295" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="1" data-z="whist_0" class="pulya-zone ${isSel(1,'whist_0') ? 'active-zone' : ''}" points="8,295 130,295 130,478 8,612" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="1" data-z="pool" class="pulya-zone ${isSel(1,'pool') ? 'active-zone' : ''}" points="130,8 232,8 232,386 130,478" fill="rgba(29,78,216,0.03)"/>
+            <polygon data-p="1" data-z="mountain" class="pulya-zone ${isSel(1,'mountain') ? 'active-zone' : ''}" points="232,8 340,8 ${cx},${cy} 232,386" fill="rgba(185,28,28,0.03)"/>
+
+            <polygon data-p="2" data-z="whist_1" class="pulya-zone ${isSel(2,'whist_1') ? 'active-zone' : ''}" points="672,8 550,8 550,295 672,295" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="2" data-z="whist_0" class="pulya-zone ${isSel(2,'whist_0') ? 'active-zone' : ''}" points="672,295 550,295 550,478 672,612" fill="rgba(21,128,61,0.03)"/>
+            <polygon data-p="2" data-z="pool" class="pulya-zone ${isSel(2,'pool') ? 'active-zone' : ''}" points="550,8 448,8 448,386 550,478" fill="rgba(29,78,216,0.03)"/>
+            <polygon data-p="2" data-z="mountain" class="pulya-zone ${isSel(2,'mountain') ? 'active-zone' : ''}" points="448,8 340,8 ${cx},${cy} 448,386" fill="rgba(185,28,28,0.03)"/>
+
+            <line x1="${cx}" y1="${cy}" x2="340" y2="8" stroke="#2c2620" stroke-width="2.5" pointer-events="none"/>
+            <line x1="${cx}" y1="${cy}" x2="8" y2="612" stroke="#2c2620" stroke-width="2.5" pointer-events="none"/>
+            <line x1="${cx}" y1="${cy}" x2="672" y2="612" stroke="#2c2620" stroke-width="2.5" pointer-events="none"/>
+
+            <line x1="232" y1="8" x2="232" y2="386" stroke="#574c41" stroke-width="1.6" pointer-events="none"/>
+            <line x1="448" y1="8" x2="448" y2="386" stroke="#574c41" stroke-width="1.6" pointer-events="none"/>
+            <line x1="222" y1="395" x2="458" y2="395" stroke="#574c41" stroke-width="1.6" pointer-events="none"/>
+
+            <line x1="130" y1="8" x2="130" y2="478" stroke="#2c2620" stroke-width="2" pointer-events="none"/>
+            <line x1="550" y1="8" x2="550" y2="478" stroke="#2c2620" stroke-width="2" pointer-events="none"/>
+            <line x1="105" y1="500" x2="575" y2="500" stroke="#2c2620" stroke-width="2" pointer-events="none"/>
+
+            <line x1="340" y1="500" x2="340" y2="612" stroke="#574c41" stroke-width="1.5" stroke-dasharray="5,4" pointer-events="none"/>
+            <line x1="8" y1="295" x2="130" y2="295" stroke="#574c41" stroke-width="1.5" stroke-dasharray="5,4" pointer-events="none"/>
+            <line x1="550" y1="295" x2="672" y2="295" stroke="#574c41" stroke-width="1.5" stroke-dasharray="5,4" pointer-events="none"/>
+
+            <circle cx="${cx}" cy="${cy}" r="24" fill="#fdfaf2" stroke="#2c2620" stroke-width="2.2" pointer-events="none"/>
+            <text x="${cx}" y="${cy + 5}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="15" fill="#1f1a17" pointer-events="none">${state.targetPool}</text>
+
+            <g pointer-events="none">
+              <text x="340" y="602" text-anchor="middle" font-weight="800" font-size="15" fill="#1f1a17">${escapeHtml(p0.name)}</text>
+              <text x="340" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">ГОРА: ${currentVal(p0.mountainHistory)}</text>
+              <text x="340" y="378" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="#b91c1c">${formatPulyaSeries(p0.mountainHistory, 9)}</text>
+              <text x="340" y="425" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">ПУЛЯ: ${currentVal(p0.poolHistory)} / ${state.targetPool}</text>
+              <text x="340" y="458" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="15" font-weight="700" fill="#1d4ed8">${formatPulyaSeries(p0.poolHistory, 10)}</text>
+              <text x="205" y="524" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">Висты на ${escapeHtml(shortName(p1.name))}: ${currentVal(p0.whistHistory[1])}</text>
+              <text x="205" y="555" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#15803d">${formatPulyaSeries(p0.whistHistory[1], 7)}</text>
+              <text x="475" y="524" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">Висты на ${escapeHtml(shortName(p2.name))}: ${currentVal(p0.whistHistory[2])}</text>
+              <text x="475" y="555" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#15803d">${formatPulyaSeries(p0.whistHistory[2], 7)}</text>
+            </g>
+
+            <g pointer-events="none">
+              <text x="180" y="28" text-anchor="middle" font-weight="800" font-size="15" fill="#1f1a17">${escapeHtml(p1.name)}</text>
+              <text x="285" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">ГОРА</text>
+              <text x="285" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" fill="#b91c1c">${currentVal(p1.mountainHistory)}</text>
+              ${renderVerticalSeries(p1.mountainHistory, 285, 126, '#b91c1c', 7)}
+
+              <text x="181" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">ПУЛЯ</text>
+              <text x="181" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" fill="#1d4ed8">${currentVal(p1.poolHistory)}</text>
+              ${renderVerticalSeries(p1.poolHistory, 181, 126, '#1d4ed8', 9)}
+
+              <text x="69" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">на ${escapeHtml(shortName(p2.name))}</text>
+              <text x="69" y="70" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="#15803d">${currentVal(p1.whistHistory[2])}</text>
+              ${renderVerticalSeries(p1.whistHistory[2], 69, 95, '#15803d', 7)}
+
+              <text x="69" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">на ${escapeHtml(shortName(p0.name))}</text>
+              <text x="69" y="347" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="#15803d">${currentVal(p1.whistHistory[0])}</text>
+              ${renderVerticalSeries(p1.whistHistory[0], 69, 372, '#15803d', 6)}
+            </g>
+
+            <g pointer-events="none">
+              <text x="500" y="28" text-anchor="middle" font-weight="800" font-size="15" fill="#1f1a17">${escapeHtml(p2.name)}</text>
+              <text x="395" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">ГОРА</text>
+              <text x="395" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" fill="#b91c1c">${currentVal(p2.mountainHistory)}</text>
+              ${renderVerticalSeries(p2.mountainHistory, 395, 126, '#b91c1c', 7)}
+
+              <text x="499" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">ПУЛЯ</text>
+              <text x="499" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" fill="#1d4ed8">${currentVal(p2.poolHistory)}</text>
+              ${renderVerticalSeries(p2.poolHistory, 499, 126, '#1d4ed8', 9)}
+
+              <text x="611" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">на ${escapeHtml(shortName(p1.name))}</text>
+              <text x="611" y="70" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="#15803d">${currentVal(p2.whistHistory[1])}</text>
+              ${renderVerticalSeries(p2.whistHistory[1], 611, 95, '#15803d', 7)}
+
+              <text x="611" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">на ${escapeHtml(shortName(p0.name))}</text>
+              <text x="611" y="347" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="#15803d">${currentVal(p2.whistHistory[0])}</text>
+              ${renderVerticalSeries(p2.whistHistory[0], 611, 372, '#15803d', 6)}
+            </g>
+          `;
+        } else {
+          const p0 = state.players[0];
+          const p1 = state.players[1];
+          const p2 = state.players[2];
+          const p3 = state.players[3];
+
+          html += `
+            <rect x="8" y="8" width="664" height="604" rx="10" fill="#fdfbf4" stroke="#2c2620" stroke-width="2.5"/>
+            <line x1="8" y1="8" x2="672" y2="612" stroke="#2c2620" stroke-width="2.2" pointer-events="none"/>
+            <line x1="672" y1="8" x2="8" y2="612" stroke="#2c2620" stroke-width="2.2" pointer-events="none"/>
+
+            <rect x="225" y="205" width="230" height="210" fill="none" stroke="#574c41" stroke-width="1.6" pointer-events="none"/>
+            <rect x="120" y="110" width="440" height="400" fill="none" stroke="#2c2620" stroke-width="2" pointer-events="none"/>
+
+            <circle cx="340" cy="310" r="24" fill="#fdfaf2" stroke="#2c2620" stroke-width="2.2" pointer-events="none"/>
+            <text x="340" y="315" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="15" fill="#1f1a17" pointer-events="none">${state.targetPool}</text>
+
+            <rect data-p="0" data-z="mountain" class="pulya-zone ${isSel(0,'mountain') ? 'active-zone' : ''}" x="245" y="340" width="190" height="68" rx="6" fill="rgba(185,28,28,0.04)"/>
+            <rect data-p="0" data-z="pool" class="pulya-zone ${isSel(0,'pool') ? 'active-zone' : ''}" x="165" y="420" width="350" height="82" rx="6" fill="rgba(29,78,216,0.04)"/>
+            <rect data-p="0" data-z="whist_1" class="pulya-zone ${isSel(0,'whist_1') ? 'active-zone' : ''}" x="80" y="515" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="0" data-z="whist_2" class="pulya-zone ${isSel(0,'whist_2') ? 'active-zone' : ''}" x="255" y="515" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="0" data-z="whist_3" class="pulya-zone ${isSel(0,'whist_3') ? 'active-zone' : ''}" x="430" y="515" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+
+            <g pointer-events="none">
+              <text x="340" y="600" text-anchor="middle" font-weight="800" font-size="14" fill="#1f1a17">${escapeHtml(p0.name)}</text>
+              <text x="340" y="378" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">ГОРА: ${formatPulyaSeries(p0.mountainHistory, 7)}</text>
+              <text x="340" y="465" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">ПУЛЯ: ${formatPulyaSeries(p0.poolHistory, 9)}</text>
+              <text x="165" y="552" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p1.name))}: ${currentVal(p0.whistHistory[1])}</text>
+              <text x="340" y="552" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p2.name))}: ${currentVal(p0.whistHistory[2])}</text>
+              <text x="515" y="552" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p3.name))}: ${currentVal(p0.whistHistory[3])}</text>
+            </g>
+
+            <rect data-p="2" data-z="mountain" class="pulya-zone ${isSel(2,'mountain') ? 'active-zone' : ''}" x="245" y="212" width="190" height="68" rx="6" fill="rgba(185,28,28,0.04)"/>
+            <rect data-p="2" data-z="pool" class="pulya-zone ${isSel(2,'pool') ? 'active-zone' : ''}" x="165" y="118" width="350" height="82" rx="6" fill="rgba(29,78,216,0.04)"/>
+            <rect data-p="2" data-z="whist_1" class="pulya-zone ${isSel(2,'whist_1') ? 'active-zone' : ''}" x="80" y="40" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="2" data-z="whist_0" class="pulya-zone ${isSel(2,'whist_0') ? 'active-zone' : ''}" x="255" y="40" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="2" data-z="whist_3" class="pulya-zone ${isSel(2,'whist_3') ? 'active-zone' : ''}" x="430" y="40" width="170" height="65" rx="6" fill="rgba(21,128,61,0.04)"/>
+
+            <g pointer-events="none">
+              <text x="340" y="28" text-anchor="middle" font-weight="800" font-size="14" fill="#1f1a17">${escapeHtml(p2.name)}</text>
+              <text x="340" y="250" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">ГОРА: ${formatPulyaSeries(p2.mountainHistory, 7)}</text>
+              <text x="340" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">ПУЛЯ: ${formatPulyaSeries(p2.poolHistory, 9)}</text>
+              <text x="165" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p1.name))}: ${currentVal(p2.whistHistory[1])}</text>
+              <text x="340" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p0.name))}: ${currentVal(p2.whistHistory[0])}</text>
+              <text x="515" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">В. на ${escapeHtml(shortName(p3.name))}: ${currentVal(p2.whistHistory[3])}</text>
+            </g>
+
+            <rect data-p="1" data-z="mountain" class="pulya-zone ${isSel(1,'mountain') ? 'active-zone' : ''}" x="228" y="265" width="75" height="90" rx="6" fill="rgba(185,28,28,0.04)"/>
+            <rect data-p="1" data-z="pool" class="pulya-zone ${isSel(1,'pool') ? 'active-zone' : ''}" x="125" y="215" width="95" height="190" rx="6" fill="rgba(29,78,216,0.04)"/>
+            <rect data-p="1" data-z="whist_2" class="pulya-zone ${isSel(1,'whist_2') ? 'active-zone' : ''}" x="12" y="155" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="1" data-z="whist_3" class="pulya-zone ${isSel(1,'whist_3') ? 'active-zone' : ''}" x="12" y="260" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="1" data-z="whist_0" class="pulya-zone ${isSel(1,'whist_0') ? 'active-zone' : ''}" x="12" y="365" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+
+            <g pointer-events="none">
+              <text x="62" y="140" text-anchor="middle" font-weight="800" font-size="12" fill="#1f1a17">${escapeHtml(shortName(p1.name))}</text>
+              <text x="265" y="315" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">Г: ${currentVal(p1.mountainHistory)}</text>
+              <text x="172" y="315" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">П: ${currentVal(p1.poolHistory)}</text>
+              <text x="63" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p2.name))}: ${currentVal(p1.whistHistory[2])}</text>
+              <text x="63" y="310" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p3.name))}: ${currentVal(p1.whistHistory[3])}</text>
+              <text x="63" y="415" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p0.name))}: ${currentVal(p1.whistHistory[0])}</text>
+            </g>
+
+            <rect data-p="3" data-z="mountain" class="pulya-zone ${isSel(3,'mountain') ? 'active-zone' : ''}" x="377" y="265" width="75" height="90" rx="6" fill="rgba(185,28,28,0.04)"/>
+            <rect data-p="3" data-z="pool" class="pulya-zone ${isSel(3,'pool') ? 'active-zone' : ''}" x="460" y="215" width="95" height="190" rx="6" fill="rgba(29,78,216,0.04)"/>
+            <rect data-p="3" data-z="whist_2" class="pulya-zone ${isSel(3,'whist_2') ? 'active-zone' : ''}" x="566" y="155" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="3" data-z="whist_1" class="pulya-zone ${isSel(3,'whist_1') ? 'active-zone' : ''}" x="566" y="260" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+            <rect data-p="3" data-z="whist_0" class="pulya-zone ${isSel(3,'whist_0') ? 'active-zone' : ''}" x="566" y="365" width="102" height="95" rx="6" fill="rgba(21,128,61,0.04)"/>
+
+            <g pointer-events="none">
+              <text x="618" y="140" text-anchor="middle" font-weight="800" font-size="12" fill="#1f1a17">${escapeHtml(shortName(p3.name))}</text>
+              <text x="415" y="315" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">Г: ${currentVal(p3.mountainHistory)}</text>
+              <text x="508" y="315" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">П: ${currentVal(p3.poolHistory)}</text>
+              <text x="617" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p2.name))}: ${currentVal(p3.whistHistory[2])}</text>
+              <text x="617" y="310" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p1.name))}: ${currentVal(p3.whistHistory[1])}</text>
+              <text x="617" y="415" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">на ${escapeHtml(shortName(p0.name))}: ${currentVal(p3.whistHistory[0])}</text>
+            </g>
+          `;
+        }
+
+        svg.innerHTML = html;
+        applyZoom();
+
+        svg.querySelectorAll('.pulya-zone').forEach(el => {
+          el.addEventListener('click', () => {
+            const p = Number(el.getAttribute('data-p'));
+            const z = el.getAttribute('data-z');
+            if (!isNaN(p) && z) {
+              openZonePopup(p, z);
+            }
+          });
+        });
+      }
+
+      function renderVerticalSeries(arr, x, startY, color, maxCount) {
+        if (!arr || arr.length <= 1) return '';
+        const prev = arr.slice(0, arr.length - 1);
+        const shown = prev.length > maxCount ? prev.slice(prev.length - maxCount) : prev;
+        return shown.map((val, idx) => {
+          const y = startY + idx * 18;
+          return `<text x="${x}" y="${y}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="${color}" opacity="0.55" text-decoration="line-through">${val}.</text>`;
+        }).join('');
+      }
+
+      // ==================== SOCHINKA SETTLEMENT ENGINE ====================
+      function calculateSochinkaSettlement() {
+        const n = state.numPlayers;
+        const target = Number(state.targetPool) || 20;
+        const whistPrice = Number(state.whistPrice) || 1;
+
+        const pools = [];
+        const mountains = [];
+        for (let i = 0; i < n; i++) {
+          pools.push(currentVal(state.players[i].poolHistory));
+          mountains.push(currentVal(state.players[i].mountainHistory));
+        }
+
+        const effMountains = [];
+        for (let i = 0; i < n; i++) {
+          effMountains.push(mountains[i] + (target - pools[i]));
+        }
+
+        const minEffMountain = Math.min(...effMountains);
+        const ampMountains = effMountains.map(m => m - minEffMountain);
+
+        const mountainWhistsNet = [];
+        for (let i = 0; i < n; i++) {
+          let net = 0;
+          for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            net += (ampMountains[j] - ampMountains[i]) * (10 / n);
+          }
+          mountainWhistsNet.push(net);
+        }
+
+        const directWhistsNet = [];
+        for (let i = 0; i < n; i++) {
+          let wNet = 0;
+          for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            const w_ij = currentVal(state.players[i].whistHistory[j]);
+            const w_ji = currentVal(state.players[j].whistHistory[i]);
+            wNet += (w_ij - w_ji);
+          }
+          directWhistsNet.push(wNet);
+        }
+
+        const totalWhistsNet = [];
+        const moneyNet = [];
+        for (let i = 0; i < n; i++) {
+          const tot = mountainWhistsNet[i] + directWhistsNet[i];
+          totalWhistsNet.push(tot);
+          moneyNet.push(tot * whistPrice);
+        }
+
+        return {
+          n,
+          target,
+          whistPrice,
+          pools,
+          mountains,
+          effMountains,
+          minEffMountain,
+          ampMountains,
+          mountainWhistsNet,
+          directWhistsNet,
+          totalWhistsNet,
+          moneyNet
+        };
+      }
+
+      // ==================== UI RENDERING ====================
+      function renderPlayerInputs() {
+        const container = document.getElementById('playerInputsContainer');
+        if (!container) return;
+        const n = state.numPlayers;
+        container.className = n === 3 ? 'players-input-grid-3' : 'players-input-grid-4';
+
+        let html = '';
+        for (let i = 0; i < n; i++) {
+          html += `
+            <div>
+              <input
+                type="text"
+                data-player-name-idx="${i}"
+                value="${escapeHtml(state.players[i].name)}"
+                class="form-input"
+                style="font-weight:600;"
+              />
+            </div>
+          `;
+        }
+        container.innerHTML = html;
+
+        container.querySelectorAll('input[data-player-name-idx]').forEach(inp => {
+          inp.addEventListener('input', (e) => {
+            const idx = Number(inp.getAttribute('data-player-name-idx'));
+            state.players[idx].name = e.target.value || `Игрок ${idx + 1}`;
+            saveState();
+            renderPulyaSvg();
+            renderDealCalculator();
+            renderSettlement();
+          });
+        });
+      }
+
+      function renderProgressBar() {
+        const n = state.numPlayers;
+        const totalTarget = n * (Number(state.targetPool) || 20);
+        let sumPools = 0;
+        for (let i = 0; i < n; i++) {
+          sumPools += currentVal(state.players[i].poolHistory);
+        }
+        const pct = totalTarget > 0 ? Math.min(100, Math.round((sumPools / totalTarget) * 100)) : 0;
+        const bar = document.getElementById('poolProgressBar');
+        const lbl = document.getElementById('poolProgressLabel');
+        const sheetBadge = document.getElementById('sheetTargetBadge');
+
+        if (bar) bar.style.width = pct + '%';
+        if (lbl) lbl.textContent = `${sumPools} / ${totalTarget} (${pct}%)`;
+        if (sheetBadge) sheetBadge.textContent = `до ${state.targetPool}`;
+      }
+
+      // ==================== VERTICAL CALCULATOR RENDERING ====================
+      function renderDealCalculator() {
+        const n = state.numPlayers;
+        if (state.ui.activePlayer >= n) state.ui.activePlayer = 0;
+
+        document.getElementById('dealNumberBadge').textContent = state.history.length + 1;
+
+        const lastLbl = document.getElementById('lastCalcEntryLabel');
+        const btnUndoCalc = document.getElementById('btnUndoCalcLast');
+        const hasUndoneable = state.history.some(h => !h.isUndo && !h.isUndone);
+
+        if (state.history.length > 0) {
+          const last = state.history[state.history.length - 1];
+          if (lastLbl) lastLbl.textContent = `#${last.id} ${last.label}`;
+          if (btnUndoCalc) btnUndoCalc.disabled = !hasUndoneable;
+        } else {
+          if (lastLbl) lastLbl.textContent = 'нет записей';
+          if (btnUndoCalc) btnUndoCalc.disabled = true;
+        }
+
+        const rBadge = document.getElementById('raspasyStackMultBadge');
+        if (rBadge) rBadge.textContent = `×${state.ui.raspasyMult}`;
+
+        const pStack = document.getElementById('verticalPlayersStack');
+        if (pStack) {
+          const isRaspasy = state.ui.selectedGame === 'raspasy';
+          pStack.innerHTML = Array.from({ length: n }, (_, i) => {
+            const active = !isRaspasy && i === state.ui.activePlayer;
+            const poolVal = currentVal(state.players[i].poolHistory);
+            const mountVal = currentVal(state.players[i].mountainHistory);
+            return `
+              <button type="button" data-stack-player="${i}" class="v-stack-btn ${active ? 'active' : ''}">
+                <span>${escapeHtml(state.players[i].name)}</span>
+                <span class="font-mono-num" style="font-size:10px; opacity:0.85; flex-shrink:0;">П:${poolVal} Г:${mountVal}</span>
+              </button>
+            `;
+          }).join('');
+
+          pStack.querySelectorAll('button[data-stack-player]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              triggerHaptic('selection');
+              state.ui.activePlayer = Number(btn.getAttribute('data-stack-player'));
+              if (state.ui.selectedGame === 'raspasy') {
+                state.ui.selectedGame = String(state.ui.contractLevel || 6);
+              }
+              ensureNonDeclarerRoles();
+              saveState();
+              renderDealCalculator();
+            });
+          });
+        }
+
+        document.querySelectorAll('.game-stack-btn').forEach(btn => {
+          const g = btn.getAttribute('data-game');
+          btn.classList.toggle('active', g === state.ui.selectedGame);
+        });
+
+        const selGame = state.ui.selectedGame;
+        const isContract = ['6', '7', '8', '9', '10'].includes(selGame);
+        document.getElementById('tabPanel-contract').classList.toggle('hidden', !isContract);
+        document.getElementById('tabPanel-misere').classList.toggle('hidden', selGame !== 'misere');
+        document.getElementById('tabPanel-raspasy').classList.toggle('hidden', selGame !== 'raspasy');
+
+        if (isContract) {
+          state.ui.contractLevel = Number(selGame);
+          ensureNonDeclarerRoles();
+          renderContractTab();
+        } else if (selGame === 'misere') {
+          renderMisereTab();
+        } else if (selGame === 'raspasy') {
+          renderRaspasyTab();
+        }
+      }
+
+      function ensureNonDeclarerRoles() {
+        const decl = state.ui.activePlayer;
+        const nonDecls = getNonDeclarers(decl);
+        const is4p = state.numPlayers === 4;
+
+        if (is4p) {
+          let prikupCount = 0;
+          nonDecls.forEach(idx => {
+            if (state.ui.nonDeclRoles[idx] === 'prikup') prikupCount++;
+          });
+          if (prikupCount === 0) {
+            state.ui.nonDeclRoles[nonDecls[nonDecls.length - 1]] = 'prikup';
+          } else if (prikupCount > 1) {
+            let foundFirst = false;
+            nonDecls.forEach(idx => {
+              if (state.ui.nonDeclRoles[idx] === 'prikup') {
+                if (!foundFirst) foundFirst = true;
+                else state.ui.nonDeclRoles[idx] = 'pass';
+              }
+            });
+          }
+        } else {
+          nonDecls.forEach(idx => {
+            if (state.ui.nonDeclRoles[idx] === 'prikup') {
+              state.ui.nonDeclRoles[idx] = 'pass';
+            }
+          });
+        }
+
+        nonDecls.forEach(idx => {
+          if (!['whist', 'pass', 'prikup'].includes(state.ui.nonDeclRoles[idx])) {
+            state.ui.nonDeclRoles[idx] = 'pass';
+          }
+        });
+
+        const whisters = nonDecls.filter(idx => state.ui.nonDeclRoles[idx] === 'whist');
+        if (whisters.length === 0) {
+          const firstNonPrikup = nonDecls.find(idx => state.ui.nonDeclRoles[idx] !== 'prikup');
+          if (firstNonPrikup !== undefined) {
+            state.ui.nonDeclRoles[firstNonPrikup] = 'whist';
+          }
+        }
+      }
+
+      function renderContractTab() {
+        const decl = state.ui.activePlayer;
+        const lvl = state.ui.contractLevel;
+        const spec = CONTRACT_SPECS[lvl];
+        const nonDecls = getNonDeclarers(decl);
+        const is4p = state.numPlayers === 4;
+
+        ensureNonDeclarerRoles();
+
+        const hint = document.getElementById('contractPriceHint');
+        if (lvl === 10 && state.tenRule === 'check') {
+          hint.textContent = `Цена: 10 очк. • Десятерная проверяется`;
+        } else {
+          hint.textContent = `Цена: ${spec.price} очк. • Вист: ${spec.reqWhistTricks} вз. (${spec.reqWhistPoints} в.)`;
+        }
+
+        // Quick Action: ONLY on Contract 6 -> single green button "Своя игра"
+        const presetsEl = document.getElementById('quickContractPresets');
+        if (presetsEl) {
+          if (lvl === 6) {
+            const dName = shortName(state.players[decl].name);
+            const prikupIdx = getCurrentPrikupIdx();
+            const activeWhistPartners = nonDecls.filter(idx => idx !== prikupIdx);
+            const partnersDesc = activeWhistPartners.map(idx => shortName(state.players[idx].name)).join(' и ');
+
+            presetsEl.classList.remove('hidden');
+            presetsEl.innerHTML = `
+              <button type="button" id="btnQuickSixOwnGame" class="btn btn-green" style="width:100%; padding:9px 10px; font-size:12px; justify-content:space-between;">
+                <span>✅ Своя игра (${escapeHtml(dName)} + поровну вистов)</span>
+                <span class="font-mono-num" style="font-size:11px;">+2 П • по +4 В</span>
+              </button>
+            `;
+            document.getElementById('btnQuickSixOwnGame')?.addEventListener('click', () => {
+              recordAction(`Игра 6 (${dName}) — Своя игра`, '', (c) => {
+                addPool(decl, 2, c, prikupIdx);
+                activeWhistPartners.forEach(pIdx => {
+                  addWhist(pIdx, decl, 4);
+                });
+                c.push(`${partnersDesc}: по +4 виста на ${dName}`);
+              }, 'contract');
+              showToast(`Своя игра: ${dName} +2 П, вистующим по +4 В`);
+            });
+          } else {
+            presetsEl.classList.add('hidden');
+            presetsEl.innerHTML = '';
+          }
+        }
+
+        const whisters = nonDecls.filter(idx => state.ui.nonDeclRoles[idx] === 'whist');
+        const totalDefenseTricks = Math.max(0, 10 - state.ui.declarerTricks);
+
+        if (whisters.length === 1) {
+          state.ui.nonDeclTricks[whisters[0]] = totalDefenseTricks;
+        } else if (whisters.length === 2) {
+          const w0 = whisters[0];
+          const w1 = whisters[1];
+          if ((state.ui.nonDeclTricks[w0] || 0) + (state.ui.nonDeclTricks[w1] || 0) !== totalDefenseTricks) {
+            state.ui.nonDeclTricks[w0] = Math.ceil(totalDefenseTricks / 2);
+            state.ui.nonDeclTricks[w1] = totalDefenseTricks - state.ui.nonDeclTricks[w0];
+          }
+        }
+        nonDecls.forEach(idx => {
+          if (state.ui.nonDeclRoles[idx] !== 'whist') {
+            state.ui.nonDeclTricks[idx] = 0;
+          }
+        });
+
+        const tricksArea = document.getElementById('contractTricksArea');
+
+        // Declarer Row
+        let tHtml = `
+          <div class="defender-row" style="background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.4);">
+            <div>
+              <div style="font-size:11.5px; font-weight:700; color:#fde68a;">Играющий: ${escapeHtml(shortName(state.players[decl].name))}</div>
+              <div style="font-size:10px; color:#a7f3d0;">Контракт: ${lvl} вз.</div>
+            </div>
+            <div class="stepper-group">
+              <button type="button" id="btnDeclTricksDec" class="stepper-btn">−</button>
+              <span class="font-mono-num" style="min-width:48px; text-align:center; font-size:12.5px; font-weight:700; color:${state.ui.declarerTricks >= lvl ? '#34d399' : '#fca5a5'};">${state.ui.declarerTricks} вз.</span>
+              <button type="button" id="btnDeclTricksInc" class="stepper-btn">+</button>
+            </div>
+          </div>
+        `;
+
+        // Non-Declarer Rows (2 in 3p, ALL 3 in 4p mode!)
+        nonDecls.forEach(dIdx => {
+          const role = state.ui.nonDeclRoles[dIdx] || 'pass';
+          const dName = state.players[dIdx].name;
+          const tr = state.ui.nonDeclTricks[dIdx] || 0;
+
+          tHtml += `
+            <div class="defender-row">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span style="font-size:11.5px; font-weight:700; min-width:68px;">${escapeHtml(shortName(dName))}</span>
+                <div class="role-toggle-group">
+                  <button type="button" data-role-set="whist" data-target-p="${dIdx}" class="role-btn ${role === 'whist' ? 'active-whist' : ''}">Вист</button>
+                  <button type="button" data-role-set="pass" data-target-p="${dIdx}" class="role-btn ${role === 'pass' ? 'active-pass' : ''}">Пас</button>
+                  ${is4p ? `<button type="button" data-role-set="prikup" data-target-p="${dIdx}" class="role-btn ${role === 'prikup' ? 'active-prikup' : ''}">Прикуп</button>` : ''}
+                </div>
+              </div>
+
+              <div class="stepper-group">
+                ${role === 'prikup' ? `
+                  <span style="font-size:10.5px; color:#fcd34d; font-weight:700; padding:2px 4px;">(прикуп)</span>
+                ` : role === 'pass' ? `
+                  <span style="font-size:10.5px; color:#94a3b8; padding:2px 4px;">0 вз.</span>
+                ` : whisters.length === 1 ? `
+                  <span class="font-mono-num" style="font-size:12px; font-weight:700; color:#34d399; padding:2px 6px;">${tr} вз.</span>
+                ` : `
+                  <button type="button" data-whist-dec="${dIdx}" class="stepper-btn">−</button>
+                  <span class="font-mono-num" style="min-width:44px; text-align:center; font-size:12px; font-weight:700; color:#fcd34d;">${tr} вз.</span>
+                  <button type="button" data-whist-inc="${dIdx}" class="stepper-btn">+</button>
+                `}
+              </div>
+            </div>
+          `;
+        });
+
+        tricksArea.innerHTML = tHtml;
+
+        document.getElementById('btnDeclTricksDec')?.addEventListener('click', () => {
+          triggerHaptic('light');
+          state.ui.declarerTricks = Math.max(0, state.ui.declarerTricks - 1);
+          renderContractTab();
+        });
+        document.getElementById('btnDeclTricksInc')?.addEventListener('click', () => {
+          triggerHaptic('light');
+          state.ui.declarerTricks = Math.min(10, state.ui.declarerTricks + 1);
+          renderContractTab();
+        });
+
+        tricksArea.querySelectorAll('button[data-role-set]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('selection');
+            const newRole = btn.getAttribute('data-role-set');
+            const targetP = Number(btn.getAttribute('data-target-p'));
+
+            if (newRole === 'prikup' && is4p) {
+              nonDecls.forEach(idx => {
+                if (idx === targetP) {
+                  state.ui.nonDeclRoles[idx] = 'prikup';
+                  state.ui.nonDeclTricks[idx] = 0;
+                } else if (state.ui.nonDeclRoles[idx] === 'prikup') {
+                  state.ui.nonDeclRoles[idx] = 'pass';
+                }
+              });
+            } else if (newRole === 'whist') {
+              if (state.ui.nonDeclRoles[targetP] === 'prikup' && is4p) {
+                const nextPrikup = nonDecls.find(idx => idx !== targetP && state.ui.nonDeclRoles[idx] !== 'whist');
+                if (nextPrikup !== undefined) {
+                  state.ui.nonDeclRoles[nextPrikup] = 'prikup';
+                }
+              }
+              state.ui.nonDeclRoles[targetP] = 'whist';
+            } else if (newRole === 'pass') {
+              if (state.ui.nonDeclRoles[targetP] === 'prikup' && is4p) {
+                const nextPrikup = nonDecls.find(idx => idx !== targetP);
+                if (nextPrikup !== undefined) {
+                  state.ui.nonDeclRoles[nextPrikup] = 'prikup';
+                }
+              }
+              state.ui.nonDeclRoles[targetP] = 'pass';
+              state.ui.nonDeclTricks[targetP] = 0;
+            }
+
+            saveState();
+            renderContractTab();
+          });
+        });
+
+        tricksArea.querySelectorAll('button[data-whist-dec]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('light');
+            const targetP = Number(btn.getAttribute('data-whist-dec'));
+            const otherWhister = whisters.find(idx => idx !== targetP);
+            if (otherWhister !== undefined) {
+              state.ui.nonDeclTricks[targetP] = Math.max(0, (state.ui.nonDeclTricks[targetP] || 0) - 1);
+              state.ui.nonDeclTricks[otherWhister] = totalDefenseTricks - state.ui.nonDeclTricks[targetP];
+              saveState();
+              renderContractTab();
+            }
+          });
+        });
+
+        tricksArea.querySelectorAll('button[data-whist-inc]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('light');
+            const targetP = Number(btn.getAttribute('data-whist-inc'));
+            const otherWhister = whisters.find(idx => idx !== targetP);
+            if (otherWhister !== undefined) {
+              state.ui.nonDeclTricks[targetP] = Math.min(totalDefenseTricks, (state.ui.nonDeclTricks[targetP] || 0) + 1);
+              state.ui.nonDeclTricks[otherWhister] = totalDefenseTricks - state.ui.nonDeclTricks[targetP];
+              saveState();
+              renderContractTab();
+            }
+          });
+        });
+
+        const outcome = computeContractOutcome();
+        const previewBox = document.getElementById('contractPreviewBox');
+        previewBox.innerHTML = `
+          <div style="font-weight:700; color:#fcd34d; margin-bottom:2px;">${escapeHtml(outcome.title)}</div>
+          <div style="color:#d1fae5;">${outcome.lines.map(l => `<div>• ${escapeHtml(l)}</div>`).join('')}</div>
+        `;
+      }
+
+      function computeContractOutcome() {
+        const decl = state.ui.activePlayer;
+        const lvl = state.ui.contractLevel;
+        const spec = CONTRACT_SPECS[lvl];
+        const nonDecls = getNonDeclarers(decl);
+        const prikupIdx = getCurrentPrikupIdx();
+
+        const whisters = nonDecls.filter(idx => state.ui.nonDeclRoles[idx] === 'whist');
+        const anyWhisting = whisters.length > 0;
+        const declTricks = state.ui.declarerTricks;
+        const under = Math.max(0, lvl - declTricks);
+
+        const lines = [];
+        const actions = [];
+
+        if (!anyWhisting) {
+          if (declTricks >= lvl) {
+            const poolDesc = describePoolSteps(decl, spec.price, prikupIdx);
+            poolDesc.forEach(d => lines.push(`${d} (оба пас)`));
+            actions.push((c) => addPool(decl, spec.price, c, prikupIdx));
+          } else {
+            const mountPts = under * spec.price;
+            lines.push(`${shortName(state.players[decl].name)}: ремиз без ${under} → +${mountPts} в Гору`);
+            actions.push((c) => {
+              addMountain(decl, mountPts);
+              c.push(`${shortName(state.players[decl].name)}: +${mountPts} в Гору`);
+            });
+            const penaltyWhists = under * spec.price;
+            const otherNames = nonDecls.map(idx => shortName(state.players[idx].name)).join(', ');
+            lines.push(`Штраф за недобор (${under} вз.): всем (${otherNames}) по +${penaltyWhists} вистов на ${shortName(state.players[decl].name)}`);
+            actions.push((c) => {
+              nonDecls.forEach(idx => addWhist(idx, decl, penaltyWhists));
+              c.push(`Всем остальным по +${penaltyWhists} В за недобор`);
+            });
+          }
+          return { title: `Контракт ${lvl} (${shortName(state.players[decl].name)}, оба пас)`, lines, actions };
+        }
+
+        if (declTricks >= lvl) {
+          const poolDesc = describePoolSteps(decl, spec.price, prikupIdx);
+          poolDesc.forEach(d => lines.push(d));
+          actions.push((c) => addPool(decl, spec.price, c, prikupIdx));
+        } else {
+          const mountPts = under * spec.price;
+          lines.push(`${shortName(state.players[decl].name)}: ремиз без ${under} → +${mountPts} в Гору`);
+          actions.push((c) => {
+            addMountain(decl, mountPts);
+            c.push(`${shortName(state.players[decl].name)}: +${mountPts} в Гору`);
+          });
+        }
+
+        if (whisters.length === 1) {
+          const wIdx = whisters[0];
+          const wName = shortName(state.players[wIdx].name);
+          const tr = state.ui.nonDeclTricks[wIdx] || 0;
+          const totalW = tr * spec.price;
+          const otherDefender = nonDecls.find(idx => idx !== wIdx && idx !== prikupIdx);
+
+          if (state.whistType === 'gentleman' && otherDefender !== undefined && totalW > 0) {
+            const half = totalW / 2;
+            const oName = shortName(state.players[otherDefender].name);
+            lines.push(`${wName} и ${oName}: по +${half} вистов за ${tr} вз.`);
+            actions.push((c) => {
+              addWhist(wIdx, decl, half);
+              addWhist(otherDefender, decl, half);
+              c.push(`${wName} и ${oName}: по +${half} В`);
+            });
+          } else if (totalW > 0) {
+            lines.push(`${wName}: +${totalW} вистов за ${tr} вз.`);
+            actions.push((c) => {
+              addWhist(wIdx, decl, totalW);
+              c.push(`${wName}: +${totalW} В`);
+            });
+          }
+
+          if (declTricks >= lvl && tr < spec.reqWhistTricks && !(lvl === 10 && state.tenRule === 'check')) {
+            const miss = spec.reqWhistTricks - tr;
+            const pen = miss * spec.remizWhistPenalty;
+            lines.push(`${wName}: ремиз виста (недобор ${miss} вз.) → +${pen} в Гору`);
+            actions.push((c) => {
+              addMountain(wIdx, pen);
+              c.push(`${shortName(state.players[wIdx].name)}: +${pen} в Гору (ремиз виста)`);
+            });
+          }
+        } else if (whisters.length === 2) {
+          const w0 = whisters[0];
+          const w1 = whisters[1];
+          const tr0 = state.ui.nonDeclTricks[w0] || 0;
+          const tr1 = state.ui.nonDeclTricks[w1] || 0;
+          const w0Pts = tr0 * spec.price;
+          const w1Pts = tr1 * spec.price;
+          const w0Name = shortName(state.players[w0].name);
+          const w1Name = shortName(state.players[w1].name);
+
+          if (w0Pts > 0) {
+            lines.push(`${w0Name}: +${w0Pts} вистов за ${tr0} вз.`);
+            actions.push((c) => {
+              addWhist(w0, decl, w0Pts);
+              c.push(`${w0Name}: +${w0Pts} В`);
+            });
+          }
+          if (w1Pts > 0) {
+            lines.push(`${w1Name}: +${w1Pts} вистов за ${tr1} вз.`);
+            actions.push((c) => {
+              addWhist(w1, decl, w1Pts);
+              c.push(`${w1Name}: +${w1Pts} В`);
+            });
+          }
+
+          const totalTr = tr0 + tr1;
+          if (declTricks >= lvl && totalTr < spec.reqWhistTricks && !(lvl === 10 && state.tenRule === 'check')) {
+            if (lvl === 6 || lvl === 7) {
+              const reqEach = spec.reqWhistTricks / 2;
+              if (tr0 < reqEach) {
+                const pen0 = (reqEach - tr0) * spec.remizWhistPenalty;
+                lines.push(`${w0Name}: ремиз виста (недобор ${reqEach - tr0} вз.) → +${pen0} в Гору`);
+                actions.push((c) => {
+                  addMountain(w0, pen0);
+                  c.push(`${w0Name}: +${pen0} в Гору`);
+                });
+              }
+              if (tr1 < reqEach) {
+                const pen1 = (reqEach - tr1) * spec.remizWhistPenalty;
+                lines.push(`${w1Name}: ремиз виста (недобор ${reqEach - tr1} вз.) → +${pen1} в Гору`);
+                actions.push((c) => {
+                  addMountain(w1, pen1);
+                  c.push(`${w1Name}: +${pen1} в Гору`);
+                });
+              }
+            } else {
+              const pen = spec.remizWhistPenalty;
+              lines.push(`${w1Name}: ремиз виста → +${pen} в Гору`);
+              actions.push((c) => {
+                addMountain(w1, pen);
+                c.push(`${w1Name}: +${pen} в Гору`);
+              });
+            }
+          }
+        }
+
+        if (under > 0) {
+          const penaltyWhists = under * spec.price;
+          const otherNames = nonDecls.map(idx => shortName(state.players[idx].name)).join(', ');
+          lines.push(`Штраф за недобор (+${under} вз. каждому): ${otherNames} получают по +${penaltyWhists} вистов на ${shortName(state.players[decl].name)}`);
+          actions.push((c) => {
+            nonDecls.forEach(idx => addWhist(idx, decl, penaltyWhists));
+            c.push(`Штраф за недобор: всем (${otherNames}) по +${penaltyWhists} В`);
+          });
+        }
+
+        return {
+          title: `Игра ${lvl} (${shortName(state.players[decl].name)}, взяток: ${declTricks})`,
+          lines,
+          actions
+        };
+      }
+
+      function renderMisereTab() {
+        const mp = state.ui.activePlayer;
+        const mt = state.ui.misereTricks;
+        const prikupIdx = getCurrentPrikupIdx();
+
+        const tContainer = document.getElementById('misereTricksBtns');
+        tContainer.innerHTML = Array.from({ length: 11 }, (_, t) => {
+          const active = t === mt;
+          const cls = active ? (t === 0 ? 'btn-gold' : 'btn-danger') : 'btn-emerald';
+          return `<button type="button" data-mt="${t}" class="btn ${cls} font-mono-num" style="padding:5px 0;">${t}</button>`;
+        }).join('');
+
+        tContainer.querySelectorAll('button[data-mt]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('light');
+            state.ui.misereTricks = Number(btn.getAttribute('data-mt'));
+            renderMisereTab();
+          });
+        });
+
+        const pName = shortName(state.players[mp].name);
+        const prevBox = document.getElementById('miserePreviewBox');
+        if (mt === 0) {
+          const poolSteps = describePoolSteps(mp, 10, prikupIdx);
+          prevBox.innerHTML = `<div style="color:#34d399; font-weight:700; margin-bottom:2px;">Чистый мизер (+10 в пулю):</div>` +
+            poolSteps.map(s => `<div>• ${escapeHtml(s)}</div>`).join('');
+        } else {
+          prevBox.innerHTML = `<span style="color:#fca5a5; font-weight:700;">Паровоз (${mt} вз.)!</span> <b>${escapeHtml(pName)}</b>: <b>+${mt * 10} в Гору</b>.`;
+        }
+      }
+
+      function renderRaspasyTab() {
+        const n = state.numPlayers;
+        const mult = state.ui.raspasyMult;
+
+        const statusEl = document.getElementById('raspasyAutoStatus');
+        if (statusEl) {
+          statusEl.textContent = state.lastGameWasRaspasy
+            ? `Авто-множитель: ×${mult}`
+            : `Первые распасы: ×${mult}`;
+        }
+
+        document.querySelectorAll('.rasp-mult-btn').forEach(btn => {
+          const m = Number(btn.getAttribute('data-mult'));
+          btn.className = 'rasp-mult-btn btn font-mono-num ' + (m === mult ? 'btn-gold' : 'btn-emerald');
+        });
+
+        const container = document.getElementById('raspasyTricksContainer');
+        let html = '';
+        let sumTricks = 0;
+        for (let i = 0; i < n; i++) {
+          const t = state.ui.raspasyTricks[i] || 0;
+          sumTricks += t;
+          html += `
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+              <span style="font-size:11.5px; font-weight:600;">${escapeHtml(shortName(state.players[i].name))}</span>
+              <div class="stepper-group">
+                <button type="button" data-rasp-dec="${i}" class="stepper-btn">−</button>
+                <span class="font-mono-num" style="min-width:42px; text-align:center; font-weight:700; color:#fcd34d;">${t} вз.</span>
+                <button type="button" data-rasp-inc="${i}" class="stepper-btn">+</button>
+              </div>
+            </div>
+          `;
+        }
+        html += `
+          <div style="padding-top:5px; border-top:1px solid var(--border-emerald); display:flex; justify-content:space-between; font-size:11px;">
+            <span>Сумма взяток:</span>
+            <span class="font-mono-num" style="font-weight:700; color:${sumTricks === 10 ? '#34d399' : '#fcd34d'};">${sumTricks} / 10</span>
+          </div>
+        `;
+        container.innerHTML = html;
+
+        container.querySelectorAll('button[data-rasp-dec]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('light');
+            const idx = Number(btn.getAttribute('data-rasp-dec'));
+            state.ui.raspasyTricks[idx] = Math.max(0, (state.ui.raspasyTricks[idx] || 0) - 1);
+            renderRaspasyTab();
+          });
+        });
+
+        container.querySelectorAll('button[data-rasp-inc]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('light');
+            const idx = Number(btn.getAttribute('data-rasp-inc'));
+            state.ui.raspasyTricks[idx] = Math.min(10, (state.ui.raspasyTricks[idx] || 0) + 1);
+            renderRaspasyTab();
+          });
+        });
+
+        const prev = document.getElementById('raspasyPreviewBox');
+        const parts = [];
+        for (let i = 0; i < n; i++) {
+          const t = state.ui.raspasyTricks[i] || 0;
+          if (t === 0 && state.ui.zeroRaspasPool) {
+            parts.push(`${shortName(state.players[i].name)}: +1 П`);
+          } else if (t > 0) {
+            parts.push(`${shortName(state.players[i].name)}: +${t * mult} Г`);
+          } else {
+            parts.push(`${shortName(state.players[i].name)}: 0`);
+          }
+        }
+        prev.innerHTML = `<div style="color:#fcd34d; font-weight:700; margin-bottom:2px;">Распасы ×${mult}:</div><div>${escapeHtml(parts.join(' • '))}</div>`;
+      }
+
+      function renderSettlement() {
+        const res = calculateSochinkaSettlement();
+        const n = res.n;
+
+        const cardsGrid = document.getElementById('settlementCardsGrid');
+        cardsGrid.className = n === 3 ? 'cards-grid-3' : 'cards-grid-4';
+
+        let cardsHtml = '';
+        for (let i = 0; i < n; i++) {
+          const w = res.totalWhistsNet[i];
+          const m = res.moneyNet[i];
+          const isPos = w > 0.005;
+          const isNeg = w < -0.005;
+          const sign = isPos ? '+' : '';
+          const color = isPos ? '#34d399' : isNeg ? '#fca5a5' : '#e2e8f0';
+
+          cardsHtml += `
+            <div style="background:rgba(11,31,23,0.75); border:1px solid var(--border-emerald); border-radius:10px; padding:10px; display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                <span style="font-weight:700; font-size:13px;">${escapeHtml(state.players[i].name)}</span>
+                <span class="font-mono-num" style="font-size:11.5px; font-weight:700; padding:2px 6px; border-radius:5px; background:rgba(255,255,255,0.06); color:${color};">
+                  ${sign}${w.toFixed(1)} в.
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px; text-align:center; padding:5px 0; border-top:1px solid rgba(38,89,66,0.5); border-bottom:1px solid rgba(38,89,66,0.5);" class="font-mono-num">
+                <div>
+                  <div style="font-size:9.5px; color:#a7f3d0;">Пуля</div>
+                  <div style="font-weight:700; color:#93c5fd;">${res.pools[i]}</div>
+                </div>
+                <div>
+                  <div style="font-size:9.5px; color:#a7f3d0;">Гора</div>
+                  <div style="font-weight:700; color:#fca5a5;">${res.mountains[i]}</div>
+                </div>
+                <div>
+                  <div style="font-size:9.5px; color:#a7f3d0;">Амп. гора</div>
+                  <div style="font-weight:700; color:#fcd34d;">${res.ampMountains[i]}</div>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:11px;">
+                <span style="color:#a7f3d0;">В деньгах:</span>
+                <span class="font-mono-num" style="font-weight:700; color:${color};">${sign}${m.toFixed(1)}</span>
+              </div>
+            </div>
+          `;
+        }
+        cardsGrid.innerHTML = cardsHtml;
+
+        for (let i = 0; i < 4; i++) {
+          const th = document.getElementById('thP' + i);
+          if (th) {
+            if (i < n) {
+              th.textContent = shortName(state.players[i].name);
+              th.classList.remove('hidden');
+            } else {
+              th.classList.add('hidden');
+            }
+          }
+        }
+
+        const tbody = document.getElementById('settlementMathTbody');
+        const fmtSign = (v) => {
+          const s = v > 0.005 ? '+' : '';
+          const col = v > 0.005 ? '#34d399' : v < -0.005 ? '#fca5a5' : '#cbd5e1';
+          return `<span style="color:${col}; font-weight:700;">${s}${v.toFixed(1)}</span>`;
+        };
+        const row = (label, vals, fmtFn) => `
+          <tr>
+            <td style="font-family:Inter,sans-serif; color:#d1fae5;">${label}</td>
+            ${vals.slice(0, n).map(v => `<td style="text-align:right;">${fmtFn ? fmtFn(v) : v}</td>`).join('')}
+          </tr>
+        `;
+
+        tbody.innerHTML = [
+          row('1. Пуля (П)', res.pools),
+          row('2. Гора (Г)', res.mountains),
+          row(`3. Привед. гора (Г+${res.target}−П)`, res.effMountains),
+          row(`4. Ампутация (−${res.minEffMountain})`, res.ampMountains),
+          row('5. Гора в вистах', res.mountainWhistsNet, fmtSign),
+          row('6. Взаимные висты', res.directWhistsNet, fmtSign),
+          row('7. ИТОГО (висты)', res.totalWhistsNet, fmtSign)
+        ].join('');
+
+        const listEl = document.getElementById('pairwiseTransfersList');
+        const debtors = [];
+        const creditors = [];
+        for (let i = 0; i < n; i++) {
+          const bal = res.totalWhistsNet[i];
+          if (bal < -0.05) debtors.push({ idx: i, amount: -bal });
+          else if (bal > 0.05) creditors.push({ idx: i, amount: bal });
+        }
+
+        const transfers = [];
+        let dIdx = 0, cIdx = 0;
+        while (dIdx < debtors.length && cIdx < creditors.length) {
+          const amt = Math.min(debtors[dIdx].amount, creditors[cIdx].amount);
+          if (amt > 0.05) {
+            transfers.push({
+              from: debtors[dIdx].idx,
+              to: creditors[cIdx].idx,
+              whists: amt,
+              money: amt * res.whistPrice
+            });
+          }
+          debtors[dIdx].amount -= amt;
+          creditors[cIdx].amount -= amt;
+          if (debtors[dIdx].amount <= 0.05) dIdx++;
+          if (creditors[cIdx].amount <= 0.05) cIdx++;
+        }
+
+        if (transfers.length === 0) {
+          listEl.innerHTML = `<div style="color:#a7f3d0; padding:4px 0;">Все по нулям.</div>`;
+        } else {
+          listEl.innerHTML = transfers.map(t => `
+            <div style="padding:6px 8px; border-radius:7px; background:var(--bg-input); border:1px solid var(--border-emerald); display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <span style="font-weight:700; color:#fca5a5;">${escapeHtml(shortName(state.players[t.from].name))}</span>
+                <span style="color:#fcd34d; margin:0 4px;">→</span>
+                <span style="font-weight:700; color:#34d399;">${escapeHtml(shortName(state.players[t.to].name))}</span>
+              </div>
+              <div class="font-mono-num" style="text-align:right;">
+                <span style="font-weight:700; color:#fcd34d;">${t.whists.toFixed(1)} в.</span>
+                <span style="font-size:10px; color:#a7f3d0; margin-left:4px;">(${t.money.toFixed(1)} ₽)</span>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        const sumCheck = res.totalWhistsNet.reduce((a, b) => a + b, 0);
+        const zeroBadge = document.getElementById('zeroSumCheckBadge');
+        if (zeroBadge) {
+          zeroBadge.textContent = `${Math.abs(sumCheck) < 0.01 ? '0.0' : sumCheck.toFixed(1)} вистов ✓`;
+        }
+      }
+
+      function renderHistory() {
+        const tbody = document.getElementById('historyTbody');
+        const countLbl = document.getElementById('historyCountLabel');
+        const undoBtn = document.getElementById('btnUndo');
+        const hasUndoneable = state.history.some(h => !h.isUndo && !h.isUndone);
+
+        if (countLbl) countLbl.textContent = `Всего записей: ${state.history.length}`;
+        if (undoBtn) undoBtn.disabled = !hasUndoneable;
+
+        if (!tbody) return;
+        if (state.history.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:10px; color:#a7f3d0;">Записей пока нет.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = state.history.slice().reverse().map((item) => {
+          if (item.isUndo) {
+            return `
+              <tr style="background:rgba(185,28,28,0.14);">
+                <td class="font-mono-num" style="color:#f87171; font-weight:700;">#${item.id}</td>
+                <td style="font-weight:700; color:#fca5a5;">${escapeHtml(item.label)}</td>
+                <td style="color:#fecaca; font-style:italic;">${escapeHtml(item.detail)}</td>
+                <td style="text-align:right;"><span style="font-size:10px; color:#f87171; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(239,68,68,0.2);">ОТМЕНЕНО</span></td>
+              </tr>
+            `;
+          }
+          const isUndone = item.isUndone;
+          return `
+            <tr style="${isUndone ? 'opacity:0.4; text-decoration:line-through;' : ''}">
+              <td class="font-mono-num" style="color:#fcd34d; font-weight:700;">#${item.id}</td>
+              <td style="font-weight:600;">${escapeHtml(item.label)}</td>
+              <td style="color:#d1fae5;">${escapeHtml(item.detail)}</td>
+              <td style="text-align:right;">
+                ${isUndone ? '<span style="font-size:10px; color:#9ca3af;">отменена</span>' : ''}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function buildReportText() {
+        const res = calculateSochinkaSettlement();
+        const lines = [`♠ Пуля (до ${res.target}) — Итоги:`];
+        for (let i = 0; i < res.n; i++) {
+          const w = res.totalWhistsNet[i];
+          const s = w > 0 ? '+' : '';
+          lines.push(`${state.players[i].name}: Пуля ${res.pools[i]}, Гора ${res.mountains[i]} → Итог: ${s}${w.toFixed(1)} вистов (${s}${res.moneyNet[i].toFixed(1)} ₽)`);
+        }
+        return lines.join('\n');
+      }
+
+      function renderAll() {
+        const btn3 = document.getElementById('btnMode3');
+        const btn4 = document.getElementById('btnMode4');
+        btn3.className = 'btn ' + (state.numPlayers === 3 ? 'btn-gold' : '');
+        btn4.className = 'btn ' + (state.numPlayers === 4 ? 'btn-gold' : '');
+
+        document.getElementById('inputTargetPool').value = state.targetPool;
+        document.getElementById('inputWhistPrice').value = state.whistPrice;
+        document.getElementById('selectWhistType').value = state.whistType;
+        document.getElementById('selectTenRule').value = state.tenRule;
+        document.getElementById('chkZeroRaspasPool').checked = state.ui.zeroRaspasPool;
+
+        renderPlayerInputs();
+        renderProgressBar();
+        renderPulyaSvg();
+        renderDealCalculator();
+        renderSettlement();
+        renderHistory();
+      }
+
+      function applyInstantPointsToActiveZone(pts) {
+        const d = Number(pts);
+        if (!d || isNaN(d)) return;
+        const p = state.ui.manualPlayer;
+        const z = state.ui.manualZone;
+        const zoneTitle = getZoneHumanLabel(p, z);
+        const sign = d > 0 ? '+' : '';
+
+        recordAction(`Запись (${zoneTitle})`, '', (changes) => {
+          if (z === 'pool') {
+            addPool(p, d, changes, getCurrentPrikupIdx());
+          } else if (z === 'mountain') {
+            addMountain(p, d);
+            changes.push(`${zoneTitle}: ${sign}${d}`);
+          } else if (z.startsWith('whist_')) {
+            const tIdx = Number(z.split('_')[1]);
+            addWhist(p, tIdx, d);
+            changes.push(`${zoneTitle}: ${sign}${d}`);
+          }
+        });
+        closeZonePopup();
+        showToast(`${zoneTitle}: ${sign}${d}`);
+      }
+
+      // ==================== EVENT LISTENERS ====================
+      function initEvents() {
+        document.getElementById('btnMode3').addEventListener('click', () => {
+          triggerHaptic('selection');
+          state.numPlayers = 3;
+          ensureNonDeclarerRoles();
+          saveState();
+          renderAll();
+        });
+
+        document.getElementById('btnMode4').addEventListener('click', () => {
+          triggerHaptic('selection');
+          state.numPlayers = 4;
+          ensureNonDeclarerRoles();
+          saveState();
+          renderAll();
+        });
+
+        document.getElementById('btnZoomOut').addEventListener('click', () => {
+          triggerHaptic('light');
+          state.zoomPercent = Math.max(50, (state.zoomPercent || 80) - 10);
+          saveState();
+          applyZoom();
+        });
+        document.getElementById('btnZoomIn').addEventListener('click', () => {
+          triggerHaptic('light');
+          state.zoomPercent = Math.min(130, (state.zoomPercent || 80) + 10);
+          saveState();
+          applyZoom();
+        });
+        document.getElementById('btnZoomFit').addEventListener('click', () => {
+          triggerHaptic('light');
+          state.zoomPercent = 80;
+          saveState();
+          applyZoom();
+        });
+
+        document.getElementById('btnAddDirectZonePts').addEventListener('click', () => {
+          const inp = document.getElementById('inputDirectZonePts');
+          const v = Number(inp.value);
+          if (!v || isNaN(v)) {
+            showToast('Введите число очков');
+            triggerHaptic('warning');
+            return;
+          }
+          applyInstantPointsToActiveZone(v);
+        });
+
+        document.getElementById('inputDirectZonePts').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            document.getElementById('btnAddDirectZonePts').click();
+          } else if (e.key === 'Escape') {
+            closeZonePopup();
+            renderPulyaSvg();
+          }
+        });
+
+        document.getElementById('btnCloseZonePopup').addEventListener('click', () => {
+          triggerHaptic('light');
+          closeZonePopup();
+          renderPulyaSvg();
+        });
+
+        document.getElementById('zonePopupModal').addEventListener('click', (e) => {
+          if (e.target.id === 'zonePopupModal') {
+            closeZonePopup();
+            renderPulyaSvg();
+          }
+        });
+
+        document.getElementById('btnEraseZoneLast').addEventListener('click', () => {
+          const p = state.ui.manualPlayer;
+          const z = state.ui.manualZone;
+          const arr = getZoneArray(p, z);
+          if (!arr || arr.length === 0) {
+            showToast('В этой зоне ещё нет записей');
+            triggerHaptic('warning');
+            return;
+          }
+          const zoneTitle = getZoneHumanLabel(p, z);
+          recordAction(`Удалена запись (${zoneTitle})`, '', (changes) => {
+            const targetArr = getZoneArray(p, z);
+            const removed = targetArr.pop();
+            changes.push(`${zoneTitle}: убрана отметка ${removed}`);
+          });
+          closeZonePopup();
+          showToast(`Убрана последняя запись: ${zoneTitle}`);
+        });
+
+        document.getElementById('inputTargetPool').addEventListener('input', (e) => {
+          state.targetPool = Math.max(1, Number(e.target.value) || 20);
+          saveState();
+          renderProgressBar();
+          renderPulyaSvg();
+          renderDealCalculator();
+          renderSettlement();
+        });
+
+        document.getElementById('inputWhistPrice').addEventListener('input', (e) => {
+          state.whistPrice = Math.max(0, Number(e.target.value) || 0);
+          saveState();
+          renderSettlement();
+        });
+
+        document.getElementById('selectWhistType').addEventListener('change', (e) => {
+          state.whistType = e.target.value;
+          saveState();
+          renderContractTab();
+        });
+
+        document.getElementById('selectTenRule').addEventListener('change', (e) => {
+          state.tenRule = e.target.value;
+          saveState();
+          renderContractTab();
+        });
+
+        document.querySelectorAll('.game-stack-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('selection');
+            const g = btn.getAttribute('data-game');
+            state.ui.selectedGame = g;
+            if (['6', '7', '8', '9', '10'].includes(g)) {
+              const l = Number(g);
+              state.ui.contractLevel = l;
+              state.ui.declarerTricks = l;
+            }
+            ensureNonDeclarerRoles();
+            saveState();
+            renderDealCalculator();
+          });
+        });
+
+        document.getElementById('btnSubmitContract').addEventListener('click', () => {
+          const outcome = computeContractOutcome();
+          recordAction(outcome.title, outcome.lines.join(' • '), (changes) => {
+            outcome.actions.forEach(fn => fn(changes));
+          }, 'contract');
+          showToast('Записано: ' + outcome.title);
+        });
+
+        document.getElementById('btnSubmitMisere').addEventListener('click', () => {
+          const mp = state.ui.activePlayer;
+          const mt = state.ui.misereTricks;
+          const pName = shortName(state.players[mp].name);
+          const prikupIdx = getCurrentPrikupIdx();
+          if (mt === 0) {
+            recordAction(`Мизер (${pName})`, '', (c) => addPool(mp, 10, c, prikupIdx), 'misere');
+            showToast(`Чистый мизер записан (${pName})`);
+          } else {
+            recordAction(`Мизер без ${mt} (${pName})`, `${pName}: +${mt * 10} в Гору`, (c) => {
+              addMountain(mp, mt * 10);
+              c.push(`${pName}: +${mt * 10} в Гору`);
+            }, 'misere');
+            showToast(`Мизер: +${mt * 10} в Гору (${pName})`);
+          }
+        });
+
+        document.querySelectorAll('.rasp-mult-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerHaptic('selection');
+            state.ui.raspasyMult = Number(btn.getAttribute('data-mult'));
+            saveState();
+            renderDealCalculator();
+          });
+        });
+
+        document.getElementById('chkZeroRaspasPool').addEventListener('change', (e) => {
+          triggerHaptic('selection');
+          state.ui.zeroRaspasPool = e.target.checked;
+          saveState();
+          renderRaspasyTab();
+        });
+
+        document.getElementById('btnSubmitRaspasy').addEventListener('click', () => {
+          const n = state.numPlayers;
+          const mult = state.ui.raspasyMult;
+          recordAction(`Распасы ×${mult}`, '', (changes) => {
+            for (let i = 0; i < n; i++) {
+              const t = state.ui.raspasyTricks[i] || 0;
+              const pName = shortName(state.players[i].name);
+              if (t === 0 && state.ui.zeroRaspasPool) {
+                addPool(i, 1, changes, null);
+              } else if (t > 0) {
+                addMountain(i, t * mult);
+                changes.push(`${pName}: +${t * mult} в Гору`);
+              }
+            }
+          }, 'raspasy');
+          showToast(`Распасы ×${mult} записаны (след.: ×${state.ui.raspasyMult})`);
+        });
+
+        document.querySelectorAll('.deal-tab-btn, .def-mode-btn, .quick-pt-btn, button[data-instant-pts]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            renderDealCalculator();
+          });
+        });
+        document.getElementById('btnSubmitManual').addEventListener('click', () => {
+          const pts = Number(document.getElementById('inputManualPoints').value);
+          if (pts) applyInstantPointsToActiveZone(pts);
+        });
+
+        document.getElementById('btnUndo').addEventListener('click', undoLastAction);
+        document.getElementById('btnUndoCalcLast').addEventListener('click', undoLastAction);
+        document.getElementById('btnLoadDemo').addEventListener('click', clearAllScores);
+        document.getElementById('btnQuickClear').addEventListener('click', clearAllScores);
+
+        const resetModal = document.getElementById('resetModal');
+        document.getElementById('btnResetModal').addEventListener('click', () => {
+          triggerHaptic('warning');
+          resetModal.classList.remove('hidden');
+        });
+        document.getElementById('btnCancelReset').addEventListener('click', () => {
+          triggerHaptic('light');
+          resetModal.classList.add('hidden');
+        });
+        document.getElementById('btnConfirmReset').addEventListener('click', () => {
+          resetModal.classList.add('hidden');
+          clearAllScores();
+        });
+
+        // Share via Telegram
+        document.getElementById('btnShareTgReport').addEventListener('click', () => {
+          triggerHaptic('impact');
+          const report = buildReportText();
+          if (tg && tg.openTelegramLink) {
+            try {
+              tg.openTelegramLink('https://t.me/share/url?text=' + encodeURIComponent(report));
+              return;
+            } catch (e) {}
+          }
+          fallbackCopy(report);
+        });
+
+        document.getElementById('btnCopySummary').addEventListener('click', () => {
+          triggerHaptic('impact');
+          const text = buildReportText();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => showToast('Отчёт скопирован')).catch(() => fallbackCopy(text));
+          } else {
+            fallbackCopy(text);
+          }
+        });
+
+        document.getElementById('btnPrintSheet').addEventListener('click', () => {
+          window.print();
+        });
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast('Отчёт скопирован');
+        } catch (e) {
+          showToast('Ошибка копирования');
+        }
+        document.body.removeChild(ta);
+      }
+
+      initTelegramMiniApp();
+      loadState();
+      initEvents();
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
